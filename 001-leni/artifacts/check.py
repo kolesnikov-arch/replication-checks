@@ -188,20 +188,113 @@ def report(label: str, k: int, n: int) -> str:
 # The ONLY part that may be completed after the data is first opened.
 # Completing it must not require touching anything above this banner.
 
+REPORTED_CONFIG = "spreadsheetbench_direct_codeagent-v3-final"
+
+
+class TelemetryUnavailable(Exception):
+    """The released files do not carry the verifier events the contract's rules
+    consume. Raised instead of returning zeros: absent telemetry and a verifier
+    that never fired are different facts, and the frozen `Run` dataclass cannot
+    tell them apart. That conflation is a defect of the pre-registered design and
+    is reported in METHOD.md rather than patched above the banner."""
+
+
 def load_runs(checkout_path: str) -> list[Run]:
-    raise NotImplementedError(
-        "Adapter not yet written. Per CONTRACT.md the data is opened only after "
-        "(1) this protocol is committed and (2) the letter of intent is sent. "
-        "Fill this in against the released schema at commit "
-        f"{REPO_COMMIT}, changing nothing above the ADAPTER banner."
-    )
+    """Load the reported SpreadsheetBench run set and verify that the telemetry
+    the contract needs is present. Written after the letter of intent was sent,
+    against the release at REPO_COMMIT. Nothing above the ADAPTER banner changed.
+    """
+    import csv
+    import json
+    import os
+    import re
+
+    path = os.path.join(checkout_path, "data", "eval_runs_spreadsheet.csv")
+    csv.field_size_limit(1 << 30)
+    with open(path, newline="", encoding="utf-8") as fh:
+        rows = [r for r in csv.DictReader(fh)
+                if r.get("benchmark_code") == REPORTED_CONFIG]
+
+    runs = [
+        Run(
+            run_id=r["id"],
+            benchmark="spreadsheetbench",
+            matches_reference=(r.get("hard_score") == "1.0"),
+            detection_events=0,  # provisional; validated below
+            authors_label=None,
+            counterfactual_matches=None,
+            raw=r,
+        )
+        for r in rows
+    ]
+
+    # Does anything in the release carry verifier flag/confirm events?
+    missing = []
+    tools, step_counts = set(), set()
+    for r in rows:
+        blob = r.get("intermediate_steps") or ""
+        if not blob:
+            continue
+        steps = json.loads(blob).get("steps", [])
+        step_counts.add(len(steps))
+        for st in steps:
+            tools.add(((st.get("action") or {}).get("tool")))
+    text = " ".join((r.get("intermediate_steps") or "") for r in rows).lower()
+    verifier_hits = [k for k in ("cell-s", "cell_s", "verifier")
+                     if k in text]
+    # "flag" occurrences were inspected individually: all are spreadsheet content
+    # ("binary flags", "flag column"), none is verifier telemetry.
+
+    if not verifier_hits:
+        missing.append(
+            f"no verifier events in any trajectory: the only tools present are "
+            f"{sorted(t for t in tools if t)}, and every run carries "
+            f"{sorted(step_counts)} step(s) — a loop that executes, observes, "
+            f"compares and corrects is not representable in one step"
+        )
+    task_counts = {}
+    for r in rows:
+        task_counts[r["bench_task_id"]] = task_counts.get(r["bench_task_id"], 0) + 1
+    if max(task_counts.values(), default=0) < 2:
+        missing.append(
+            "no before/after artifact: every task in the reported configuration "
+            "has exactly one run, so the pre-intervention answer needed for fix "
+            "rate and for the false-alarm counterfactual does not exist"
+        )
+    if not any(r.get("loop_triggered") for r in rows):
+        missing.append(
+            "no loop-trigger field: the 3 tasks that completed without "
+            "triggering the loop cannot be separated from the 397 that did"
+        )
+    if not any(re.search(r"flag|confirm", (r.get("leniq_answer") or ""), re.I)
+               and r.get("verifier_label") for r in rows):
+        missing.append(
+            "no per-run verifier label: flagged (8), confirmed-correct (357) and "
+            "missed-error (32) runs are indistinguishable from one another"
+        )
+
+    if missing:
+        raise TelemetryUnavailable("; ".join(missing))
+    return runs
 
 
 def main() -> int:
     if len(sys.argv) != 2:
         print(__doc__)
         return 2
-    runs = load_runs(sys.argv[1])
+    try:
+        runs = load_runs(sys.argv[1])
+    except TelemetryUnavailable as e:
+        print(f"check 001 — Leni · repo {REPO_COMMIT[:7]}\n")
+        print("verdict: NOT COMPUTABLE\n")
+        print("The claim cannot be recomputed from the released files. This is a")
+        print("statement about the completeness of the release, not about whether")
+        print("the published number is correct.\n")
+        for i, item in enumerate(str(e).split("; "), 1):
+            print(f"  {i}. {item}\n")
+        print("No pass-1 or pass-2 figures are printed: with the telemetry absent")
+        print("they would be arithmetic on zeros, not measurements.")
+        return 0
     print(f"check 001 — Leni · repo {REPO_COMMIT[:7]} · {len(runs)} runs\n")
 
     try:

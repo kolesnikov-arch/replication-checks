@@ -1,0 +1,18 @@
+check 001 — Leni · repo 72bd570
+
+verdict: NOT COMPUTABLE
+
+The claim cannot be recomputed from the released files. This is a
+statement about the completeness of the release, not about whether
+the published number is correct.
+
+  1. no verifier events in any trajectory: the only tools present are ['Code_Agent_v2_direct'], and every run carries [1] step(s) — a loop that executes, observes, compares and corrects is not representable in one step
+
+  2. no before/after artifact: every task in the reported configuration has exactly one run, so the pre-intervention answer needed for fix rate and for the false-alarm counterfactual does not exist
+
+  3. no loop-trigger field: the 3 tasks that completed without triggering the loop cannot be separated from the 397 that did
+
+  4. no per-run verifier label: flagged (8), confirmed-correct (357) and missed-error (32) runs are indistinguishable from one another
+
+No pass-1 or pass-2 figures are printed: with the telemetry absent
+they would be arithmetic on zeros, not measurements.

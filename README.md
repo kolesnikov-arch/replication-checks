@@ -35,7 +35,7 @@ construction: different tasks, different oracles, different framings.
 
 | # | subject | claim under check | status |
 |---|---|---|---|
-| [001](001-leni/) | Leni Inc. — [arXiv:2607.17044](https://arxiv.org/abs/2607.17044) | verifier confusion matrix: catch ≈0.20, fix 0.75, false alarms ≈0/357 | protocol frozen |
+| [001](001-leni/) | Leni Inc. — [arXiv:2607.17044](https://arxiv.org/abs/2607.17044) | verifier confusion matrix: catch ≈0.20, fix 0.75, false alarms ≈0/357 | **NOT COMPUTABLE** — [result](001-leni/RESULT.md) · awaiting authors' reply |
 
 Each check lives in its own directory:
 
