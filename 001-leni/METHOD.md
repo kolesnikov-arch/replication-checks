@@ -46,6 +46,22 @@ executable form before the clone.
 
 Itemised in [RESULT.md](RESULT.md).
 
+## Deviation from the contract: publication order
+
+The contract says the finished result goes to the authors **before publication**, with 14
+days to respond. In practice `RESULT.md` was pushed to this public repository as soon as
+the check finished, and only then sent to the authors. A stranger could read it before
+they did, which is publication in any reasonable sense and is not what the protocol says.
+
+Recorded rather than tidied away. Mitigation, not excuse: the index marks the check as
+awaiting the authors' reply, nothing has been announced through any channel, and the
+letter carrying the result states plainly that the write-up is already visible. The reply
+window runs to 16 August regardless.
+
+Carried forward: future instalments hold the result in a branch until the reply window
+closes, or the contract is rewritten to say that pushing an unannounced result is the
+intended behaviour. One or the other — the current arrangement had it both ways.
+
 ## Deviation from the contract: none in the rules
 
 Nothing above the `ADAPTER` banner in `artifacts/check.py` was modified after the data was
