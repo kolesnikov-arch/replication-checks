@@ -147,6 +147,6 @@ of overclaim this series exists to catch.
 | | |
 |---|---|
 | frozen on | 2026-08-02 |
-| contract commit | recorded in the commit immediately following this one — a commit cannot contain its own hash |
+| contract commit | `f6ffe602c4cd7842214eab00770cc6cbc1cb03ac` — the freeze. A commit cannot contain its own hash, so it is recorded here in the commit immediately after; the freeze is the one above, and everything it contains predates the data. |
 | letter of intent sent | pending |
 | data first opened | not yet |
