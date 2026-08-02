@@ -1,0 +1,47 @@
+# Licences
+
+This repository is dual-licensed.
+
+## Scripts — MIT
+
+Applies to all code, including everything under `*/artifacts/`.
+
+MIT License
+
+Copyright (c) 2026 Dmitriy Kolesnikov
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this
+software and associated documentation files (the "Software"), to deal in the Software
+without restriction, including without limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
+to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or
+substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+## Text and results — CC BY 4.0
+
+Applies to all prose and published findings: `README.md`, every `CONTRACT.md`,
+`METHOD.md`, `RESULT.md`, and the text of any published result.
+
+Creative Commons Attribution 4.0 International (CC BY 4.0).
+Full text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+Attribution: Dmitriy Kolesnikov, ORCID 0009-0008-4229-8809.
+
+## Third-party material
+
+Material belonging to the subject of a check — data, scripts, quoted figures — remains
+under whatever licence its authors published it under, and is cited in the check that
+uses it. Nothing here relicenses anyone else's work.
+
+`REPLY.md` files reproduce the words of the authors of the work under check. Those words
+belong to their authors and are reproduced in full and unedited as a matter of the
+series' rules; they are not offered under this repository's licences.
