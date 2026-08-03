@@ -154,9 +154,33 @@ checks keep the strict policy unchanged.**
 
 | | |
 |---|---|
-| frame frozen on | `________________________` |
-| this contract's commit | `________________________` |
-| retrieval script commit | `________________________` |
-| enumerated list SHA256 | `________________________` |
-| collection began | `________________________` |
+| frame frozen on | 2026-08-02 |
+| frame rule frozen at commit | `74fbef2` — `select.py` first committed |
+| collection ran at commit | `35016ec` |
+| **enumerated list SHA256** | **`d50b15e8b6810eaabc0c7198b85fc50f23c00c8078a9dd8d442b0db7ad46fbba`** |
+| candidates retrieved | 33,805 |
+| in frame before sampling | 1,382 |
+| sampled | 25, `seed=20260802` |
 | list revealed | with the published result |
+
+Verify the hash against the file when it is released: `sha256sum frame.txt`. The bytes
+hashed are the bytes on disk — line endings are written explicitly, because a hash that
+fails to verify against its own file reads as a swapped list.
+
+### Amendments to retrieval between freeze and collection
+
+The frame rule — terms, categories, window, inclusion, sample cap, seed, and `in_frame` —
+is unchanged since `74fbef2`. Everything below changed **how candidates were fetched or
+written**, never which papers the frame contains, and each is re-derivable offline from
+the cache:
+
+| commit | change | why it cannot move the frame |
+|---|---|---|
+| `83273ef` | verified TLS; abort instead of writing on a failed request; one union query instead of eight sweeps | a union of ORs is the same set; aborting writes nothing |
+| `35016ec` | walk the window in calendar months | union of consecutive months = the year window; coverage asserted continuous, bounds match |
+| this commit | `primary_category` extraction; explicit newline on write | `in_frame` reads `categories`, never `primary`; the list is byte-identical before and after, checked |
+
+**Known discrepancy, recorded rather than reconciled:** arXiv's `totalResults` for the
+union reported 33,806; 33,805 unique records were retrieved. One record's worth. It is not
+chased because the difference cannot reach the sample without also changing the hash, and
+the hash is what the result is bound to.

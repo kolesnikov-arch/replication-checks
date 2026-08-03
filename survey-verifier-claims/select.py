@@ -180,8 +180,12 @@ def parse(xml_bytes: bytes) -> list[dict]:
             "abstract": e.findtext("a:summary", "", NS).strip(),
             "published": e.findtext("a:published", "", NS),
             "categories": [c.get("term") for c in e.findall("a:category", NS)],
-            "primary": (e.find("a:primary_category", {
-                "a": "http://arxiv.org/schemas/atom"}) or ET.Element("x")).get("term"),
+            # `or` on an Element is a trap: a leaf with no children is falsy, so
+            # the fallback always won and this field was None for every record.
+            # Frame membership never used it — in_frame reads `categories` — but
+            # the metadata was wrong, so: explicit `is not None`.
+            "primary": (lambda p: p.get("term") if p is not None else None)(
+                e.find("a:primary_category", {"a": "http://arxiv.org/schemas/atom"})),
         })
     return out
 
@@ -284,7 +288,12 @@ def main() -> int:
     canonical = "\n".join(r["id"] for r in sampled) + "\n"
     digest = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
-    LIST_OUT.write_text(canonical, encoding="utf-8")
+    # newline="" or the platform rewrites \n as \r\n on write, and the published
+    # hash then fails to verify against the very file it describes — which reads
+    # as a swapped list, not as a line-ending. The bytes hashed must be the bytes
+    # on disk. Verified by: sha256sum frame.txt == the digest printed below.
+    with LIST_OUT.open("w", encoding="utf-8", newline="") as fh:
+        fh.write(canonical)
     META_OUT.write_text(json.dumps({
         "sha256_of_frame_txt": digest,
         "frame_size_before_sampling": len(frame),
