@@ -112,22 +112,44 @@ def _ssl_context():
         return ssl.create_default_context()
 
 
-def build_query() -> str:
-    """One query for the union of the component terms.
+def month_windows() -> list[tuple[str, str]]:
+    """Split the frame's window into calendar months.
 
-    Equivalent to querying each term separately and unioning the results — a
-    union of ORs is the same set — but at a fraction of the requests. Retrieved
-    separately, `validator` alone returns several thousand records inside the
-    window, and eight such sweeps take hours of polite 3-second paging.
+    arXiv refuses to page past ~10,000 results for one query (HTTP 500 at
+    start=10000). The union of the component terms over twelve months exceeds
+    that, so the window is walked month by month and the results unioned. The
+    union of consecutive month windows is the year window — the set retrieved
+    is identical, only the number of requests changes.
+    """
+    from datetime import datetime, timedelta
+    start = datetime.strptime(WINDOW_FROM, "%Y%m%d%H%M")
+    end = datetime.strptime(WINDOW_TO, "%Y%m%d%H%M")
+    out = []
+    cur = start
+    while cur <= end:
+        nxt = (cur.replace(day=28) + timedelta(days=5)).replace(
+            day=1, hour=0, minute=0)
+        last = min(nxt - timedelta(minutes=1), end)
+        out.append((cur.strftime("%Y%m%d%H%M"), last.strftime("%Y%m%d%H%M")))
+        cur = nxt
+    return out
 
-    The change is to how the candidates are fetched, never to which papers are
-    in the frame: that is decided by `in_frame` over the abstract text, locally.
+
+def build_query(win_from: str, win_to: str) -> str:
+    """One query for the union of the component terms within one sub-window.
+
+    Equivalent to querying each term separately and unioning — a union of ORs is
+    the same set — but at a fraction of the requests. Retrieved separately,
+    `validator` alone returns thousands inside the window.
+
+    The change is to how candidates are fetched, never to which papers are in
+    the frame: that is decided by `in_frame` over the abstract text, locally.
     """
     terms = " OR ".join(f'abs:"{t}"' for t in COMPONENT_TERMS)
     cats = " OR ".join(f"cat:{c}" for c in CATEGORIES)
     return (
         f"({terms}) AND ({cats}) "
-        f"AND submittedDate:[{WINDOW_FROM} TO {WINDOW_TO}]"
+        f"AND submittedDate:[{win_from} TO {win_to}]"
     )
 
 
@@ -174,23 +196,30 @@ class RetrievalFailed(Exception):
 def retrieve() -> list[dict]:
     seen: dict[str, dict] = {}
     errors: list[str] = []
-    query = build_query()
-    start = 0
-    while True:
-        print(f"  start={start:<6}", end="", flush=True)
-        try:
-            recs = parse(fetch_page(query, start))
-        except Exception as exc:                          # noqa: BLE001
-            print(f" ОШИБКА: {exc}")
-            errors.append(f"start={start}: {exc}")
-            break
-        new = sum(1 for r in recs if r["id"] not in seen)
-        for r in recs:
-            seen.setdefault(r["id"], r)
-        print(f" +{len(recs):<4} новых {new:<4} всего {len(seen)}")
-        if len(recs) < PAGE:
-            break
-        start += PAGE
+    windows = month_windows()
+    print(f"  окно разбито на {len(windows)} месяцев (потолок пагинации arXiv ~10k)")
+    for wf, wt in windows:
+        query = build_query(wf, wt)
+        start, got = 0, 0
+        while True:
+            try:
+                recs = parse(fetch_page(query, start))
+            except Exception as exc:                      # noqa: BLE001
+                print(f"  {wf[:6]} start={start} ОШИБКА: {exc}")
+                errors.append(f"{wf[:6]} start={start}: {exc}")
+                break
+            for r in recs:
+                seen.setdefault(r["id"], r)
+            got += len(recs)
+            if len(recs) < PAGE:
+                break
+            start += PAGE
+            if start >= 10000:
+                errors.append(
+                    f"{wf[:6]}: месяц упёрся в потолок 10k — окно нужно дробить мельче")
+                break
+            time.sleep(DELAY_S)
+        print(f"  {wf[:6]}: {got:<5} всего уникальных {len(seen)}")
         time.sleep(DELAY_S)
     if errors:
         detail = "\n  ".join(errors)
