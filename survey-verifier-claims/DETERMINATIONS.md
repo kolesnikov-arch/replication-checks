@@ -90,7 +90,7 @@ A reader who rejects the note can add those 11 back and re-derive everything.
 | 2603.12071 | OUT | LoV3D's Verifier checks reasoning-label consistency but no detection rate or false-positive rate is reported; only end-to-end 93.7% and region-level 82.6%. Code link is an anonymised review repository |
 | 2605.00034 | OUT | only aggregate pipeline numbers (fallback 42% → 9.7%, 83.9% detection); the Oracle/Validator and Safety Checker are never scored individually. Replication package released |
 | **2605.01740** | **IN** | measures upstream OpenClaw *and* the authors' own hardened runtime: precision = recall = F1 = 1.000 per F-category at n=1600, Wilson bound 3.84e-4 at n=10,000. Public harness plus a CSV of per-sample ground truth and per-subject decisions |
-| **2605.14665** | **IN** (borderline) | Falkor-IRAC names citation-grounding and hallucinated-precedent rates and describes correctly rejected fabricated citations; the paper is self-described proof-of-concept with evaluation deferred, and the only figure traced is n=1. Included under *when borderline, include*; the smallness is stage 2's problem, not stage 1's |
+| 2605.14665 | **OUT — call reversed, see below** | included at first on a figure quoted in a secondary source; direct reading of the PDF shows the paper names its metrics (citation grounding, hallucinated precedent, conflict detection) and reports **no number for any of them**. It does not report a figure, so it does not belong in a survey of papers that do |
 | 2605.24834 | OUT `[note]` | Reflect-Guard, standalone safety classifier |
 | 2605.25447 | OUT | GeoSVG-RL; `precision` is geometric, `critic` is RL |
 | 2605.26663 | OUT `[note]` | authors' own verifiers, with real decision quality (NEI recall 0.691 vs 0.000, false-Support error 0.870) — but the verifier is the object of study, not an internal check on something the system produced. Same class as 2607.25069 and 2510.11822 |
@@ -151,18 +151,52 @@ commit at the collection date, per the contract.
 | 2603.04549 | `GuilinDev/Adaptive_Memory_Admission_Control_LLM_Agents` @ `40407aec883b` | RELEASED, NOT COMPUTABLE | **A, B, C.** 20 files, zero data files. Code only: scorers, features, baselines. The ~1,500 ground-truth admission labels and the controller's per-item decisions are not in the release |
 | 2603.13247 | `Athonitul/ilion-framework-simulator` @ `94efd5cc3101` | RELEASED, NOT COMPUTABLE | **B, C.** `benchmark/benchmark_v2.csv` gives 400 cases with `expected_verdict` — ground truth is there — but nothing records what the gate actually decided. A benchmark specification, not a run record |
 | 2606.09682 | `RightNow-AI/AutoMegaKernel` @ `a514bbc20a03` | RELEASED, NOT COMPUTABLE | **A, and C.** `paper/results/validator_soundness.json` is unusually complete — full confusion matrix, breakdowns by mutant class and reject reason, an explicitly empty `false_accepts` list — but it is aggregate, with no per-schedule record. And condition A fails on the authors' own disclosure: *"The E2 dynamic oracle shares code with the system"*, so ground truth is not independent of the system being judged. Recorded on their statement, not our inference |
-| 2602.24111 | — | pending | |
-| 2602.11731 | — | pending | |
-| 2604.07666 | — | pending | |
-| 2604.11943 | — | pending | |
-| 2605.14665 | — | pending | |
-| 2606.15833 | — | pending | |
-| 2606.21724 | — | pending | |
-| 2606.24124 | — | pending | |
-| 2606.29225 | — | pending | |
-| 2607.13716 | — | pending | |
+| 2604.07666 | gist `1b66fb59091e` | RELEASED, NOT COMPUTABLE | **B, C.** A reproducibility gist exists, but it is an inference-and-scoring script: no per-sample verifier decision, no independent ground truth beyond the tests it runs. The ~85% verifier precision cannot be recomputed from it |
+| 2606.15833 | — | NOT RELEASED | *"Code, prompts, and evaluation scripts are released"* — with no location anywhere in the paper |
+| 2607.13716 | — | NOT RELEASED | artifact manifest cites internal paths (`docs/research/papers/cava`, `benchmarks/source-benchmark.mjs`); no public URL anywhere |
+| 2606.29225 | — | NOT RELEASED | Ethics statement promises a future release of prompts and policy schemas; no address |
+| 2602.24111 | — | NOT RELEASED | no URL anywhere; the 100 spot-checked SMT translations are not obtainable |
+| 2602.11731 | — | NOT RELEASED | no URL anywhere; the 1,000-instance expert-agreement set is not obtainable |
+| 2604.11943 | — | NOT RELEASED | no URL anywhere. The author also discloses that ground-truth labels were *"assigned by a single annotator (the system developer)"* — condition A would fail even had the data shipped |
+| 2606.21724 | — | NOT RELEASED | no URL anywhere; per-item judge decisions behind 71.3% / 85.6% are not obtainable |
+| 2606.24124 | — | NOT RELEASED | no URL anywhere; the ProcessBench per-item data behind a false-accept rate of 0.097 is not obtainable |
 
-**5 of 15 determined: 2 COMPUTABLE (both reproduced), 3 RELEASED-NOT-COMPUTABLE.**
+### A stage-1 call reversed after stage 2 began — recorded, and it flatters the result
 
-Nothing is inferred from a missing URL: a paper is only `NOT RELEASED` once the absence has
-been checked, not once a fetch failed to show a link.
+**2605.14665 was moved from IN to OUT.** It was included on a figure quoted in a secondary
+source; reading the PDF directly showed the paper names its verifier metrics and reports no
+number for any of them. A paper that reports no figure cannot be in a survey of papers that
+report figures, so the correction is right on the merits.
+
+It must still be flagged, because **it moves the headline in the direction this survey
+would prefer.** The paper does have a released dataset, so it would have been a
+`RELEASED, NOT COMPUTABLE`; dropping it lifts the computable fraction from 2/15 to 2/14.
+A correction that happens to help is the kind that deserves the most scrutiny, so it is
+written here rather than absorbed into a revised count. A reader who disagrees can put it
+back: the result becomes 2/15 = 13.3%, CI95 [1.7%, 40.5%].
+
+**Denominator: 14.**
+
+---
+
+## Result
+
+| state | count | share | Clopper–Pearson 95% |
+|---|---|---|---|
+| **COMPUTABLE** | 2 | 14.3% | [1.8%, 42.8%] |
+| RELEASED, NOT COMPUTABLE | 4 | 28.6% | [8.4%, 58.1%] |
+| NOT RELEASED | 8 | 57.1% | [28.9%, 82.3%] |
+
+Stated the other way round: **of 14 papers publishing a quantitative figure about their own
+verification component, 12 — 85.7%, CI95 [57.2%, 98.2%] — do not release enough for a third
+party to recompute it.**
+
+**Read the interval before the point estimate.** At n=14 the computable share is consistent
+with anything from 1.8% to 42.8%, a span of 41 percentage points. This does not establish
+that the rate is 14%. What it does support, because the lower bound of the complement sits
+at 57.2%, is the weaker and more defensible claim: **most such figures are not independently
+checkable.** Any sentence tighter than that is not carried by n=14, and the contract fixed
+in advance that this is what gets published rather than grounds to keep extending.
+
+Both computable cases were not merely judged computable but **recomputed exactly**, which is
+the only reason the numerator is trustworthy at all.
