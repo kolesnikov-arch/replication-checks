@@ -1,0 +1,6 @@
+# The enumerated list is NOT published before the results — only its SHA256.
+# Publishing it early lets authors add telemetry after seeing themselves in it,
+# and the rate would then measure reactions to this survey. See CONTRACT.md.
+frame.txt
+frame.json
+cache_arxiv.jsonl
