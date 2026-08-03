@@ -36,6 +36,7 @@ construction: different tasks, different oracles, different framings.
 | # | subject | claim under check | status |
 |---|---|---|---|
 | [001](001-leni/) | Leni Inc. — [arXiv:2607.17044](https://arxiv.org/abs/2607.17044) | verifier confusion matrix: catch ≈0.20, fix 0.75, false alarms ≈0/357 | **NOT COMPUTABLE** — [result](001-leni/RESULT.md) · awaiting authors' reply |
+| [survey](survey-verifier-claims/) | 14 papers publishing a figure about their own verification component | is that figure recomputable from what was released? | **2 of 14** — [result](survey-verifier-claims/RESULT.md) · authors notified at publication, 14 days to correct |
 
 Each check lives in its own directory:
 

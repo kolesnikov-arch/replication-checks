@@ -1,6 +1,10 @@
 # The enumerated list is NOT published before the results — only its SHA256.
 # Publishing it early lets authors add telemetry after seeing themselves in it,
 # and the rate would then measure reactions to this survey. See CONTRACT.md.
-frame.txt
 frame.json
 cache_arxiv.jsonl
+
+# frame.txt is no longer ignored: the contract releases the list with the
+# result, and RESULT.md is now written. frame.json and the cache stay out —
+# the first is redundant with frame.txt, the second is 33,805 records of
+# other people's abstracts.
