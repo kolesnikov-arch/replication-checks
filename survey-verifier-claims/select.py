@@ -57,7 +57,7 @@ SAMPLE_CAP = 25
 SAMPLE_SEED = 20260802
 MIN_FRAME = 10        # below this the frame is too narrow — see stop conditions
 
-API = "http://export.arxiv.org/api/query"
+API = "https://export.arxiv.org/api/query"
 PAGE = 100
 DELAY_S = 3.0         # arXiv asks for 3 seconds between requests
 NS = {"a": "http://www.w3.org/2005/Atom"}
@@ -100,12 +100,38 @@ def in_frame(rec: dict) -> tuple[bool, list[str], list[str]]:
 
 # ------------------------------------------------------------------ retrieval
 
-def fetch_page(term: str, start: int) -> bytes:
+def _ssl_context():
+    """Verified TLS, always. Falls back to certifi's bundle where the system
+    store is unavailable — never to an unverified context: a survey that
+    silently accepts any certificate has no business auditing anyone."""
+    import ssl
+    try:
+        import certifi
+        return ssl.create_default_context(cafile=certifi.where())
+    except ImportError:
+        return ssl.create_default_context()
+
+
+def build_query() -> str:
+    """One query for the union of the component terms.
+
+    Equivalent to querying each term separately and unioning the results — a
+    union of ORs is the same set — but at a fraction of the requests. Retrieved
+    separately, `validator` alone returns several thousand records inside the
+    window, and eight such sweeps take hours of polite 3-second paging.
+
+    The change is to how the candidates are fetched, never to which papers are
+    in the frame: that is decided by `in_frame` over the abstract text, locally.
+    """
+    terms = " OR ".join(f'abs:"{t}"' for t in COMPONENT_TERMS)
     cats = " OR ".join(f"cat:{c}" for c in CATEGORIES)
-    query = (
-        f'abs:"{term}" AND ({cats}) '
+    return (
+        f"({terms}) AND ({cats}) "
         f"AND submittedDate:[{WINDOW_FROM} TO {WINDOW_TO}]"
     )
+
+
+def fetch_page(query: str, start: int) -> bytes:
     url = f"{API}?" + urllib.parse.urlencode({
         "search_query": query,
         "start": start,
@@ -113,7 +139,7 @@ def fetch_page(term: str, start: int) -> bytes:
         "sortBy": "submittedDate",
         "sortOrder": "ascending",
     })
-    with urllib.request.urlopen(url, timeout=60) as r:
+    with urllib.request.urlopen(url, timeout=60, context=_ssl_context()) as r:
         return r.read()
 
 
@@ -138,27 +164,40 @@ def parse(xml_bytes: bytes) -> list[dict]:
     return out
 
 
+class RetrievalFailed(Exception):
+    """A network or parse error during retrieval. Raised rather than returning
+    what was gathered so far: a partial frame is a wrong denominator, and a
+    wrong denominator published as a rate is exactly the failure this survey
+    exists to document. The run aborts and writes nothing."""
+
+
 def retrieve() -> list[dict]:
     seen: dict[str, dict] = {}
-    for term in COMPONENT_TERMS:
-        start, got = 0, 0
-        while True:
-            print(f"  abs:\"{term}\" start={start} ...", end="", flush=True)
-            try:
-                recs = parse(fetch_page(term, start))
-            except Exception as exc:                      # noqa: BLE001
-                print(f" ОШИБКА: {exc}")
-                break
-            print(f" {len(recs)}")
-            for r in recs:
-                seen.setdefault(r["id"], r)
-            got += len(recs)
-            if len(recs) < PAGE:
-                break
-            start += PAGE
-            time.sleep(DELAY_S)
-        print(f"  -> {term}: {got}")
+    errors: list[str] = []
+    query = build_query()
+    start = 0
+    while True:
+        print(f"  start={start:<6}", end="", flush=True)
+        try:
+            recs = parse(fetch_page(query, start))
+        except Exception as exc:                          # noqa: BLE001
+            print(f" ОШИБКА: {exc}")
+            errors.append(f"start={start}: {exc}")
+            break
+        new = sum(1 for r in recs if r["id"] not in seen)
+        for r in recs:
+            seen.setdefault(r["id"], r)
+        print(f" +{len(recs):<4} новых {new:<4} всего {len(seen)}")
+        if len(recs) < PAGE:
+            break
+        start += PAGE
         time.sleep(DELAY_S)
+    if errors:
+        detail = "\n  ".join(errors)
+        raise RetrievalFailed(
+            f"{len(errors)} запрос(ов) не выполнились; рамка была бы неполной:"
+            f"\n  {detail}"
+        )
     return list(seen.values())
 
 
@@ -188,7 +227,13 @@ def main() -> int:
         print(f"кеш: {len(records)} записей")
     else:
         print("забираю с arXiv (3 с между запросами, это надолго)")
-        records = retrieve()
+        try:
+            records = retrieve()
+        except RetrievalFailed as exc:
+            print(f"\nПРОГОН ПРЕРВАН\n{exc}")
+            print("\nНичего не записано. Неполная выборка дала бы неверный")
+            print("знаменатель, а он и есть весь результат обзора.")
+            return 3
         write_cache(records)
         print(f"кеш записан: {len(records)} уникальных")
 
