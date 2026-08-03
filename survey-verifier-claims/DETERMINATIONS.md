@@ -32,6 +32,11 @@ answers, acts); it contains an **internal check** on its own output; and the pap
 **how well that internal check does** — *"the verifier caught 8 of 40 errors"*, where the
 errors are the system's own.
 
+**Second rule, recorded when it first bit:** where inclusion is genuinely borderline,
+**include**. A larger denominator can only hold the computable fraction down or leave it
+unchanged, so erring this way runs against whatever this survey would prefer to find.
+Marked `(borderline)` where used.
+
 **Why recorded rather than quietly applied:** the boundary was found by reading, not fixed
 in advance, so it is exactly the sort of decision that can be bent toward a nicer number.
 Written down before any paper was resolved under it, so a reader can reject the rule itself
@@ -51,17 +56,17 @@ this note specifically.**
 | id | call | reason |
 |---|---|---|
 | 2508.18513 | OUT | sepsis prediction; `admission` is hospital admission. No checking component |
-| 2510.07642 | READ | generator–verifier over SQL policy; abstract reports system refusal precision |
-| 2512.05925 | READ | checker applied to *others'* published papers — third-party clause may cut |
+| 2510.07642 | READ · abs only | abstract gives system refusal precision; results section still needed |
+| 2512.05925 | OUT `[note]` | reports its own checker's precision — 263 of 316 flagged confirmed, 83.2% — but the checker inspects *other people's* papers, so the check is not over the system's own output |
 | 2512.08326 | OUT `[note]` | Argus, standalone leakage detector |
-| 2512.12492 | READ | detector + VLM verifier; abstract reports end-task detection only |
-| 2602.24111 | READ | neurosymbolic verifier auditing a VLM's own report consistency — target shape |
-| 2603.04549 | READ | A-MAC memory admission control inside an agent — target shape |
+| 2512.12492 | OUT | results give only joint detector+verifier metrics; the VLM verifier's own accept/reject accuracy is never isolated |
+| **2602.24111** | **IN** (borderline) | no verifier accuracy against gold, but a quantitative component figure exists: *"manual spot-checking of 100 text-to-SMT translations by formal verification experts and found no translation errors"* — 0/100 on the autoformalisation stage. Included under *when borderline, include* |
+| **2603.04549** | **IN** | A-MAC reports the admission controller's own precision 0.417 / recall 0.972 against ~1,500 ground-truth admission labels. Code released |
 | 2603.11875 | OUT `[note]` | Mirror, standalone prompt-injection screen |
-| 2603.13247 | READ | ILION, execution gate between agent and effect |
+| **2603.13247** | **IN** | ILION reports the gate's own F1 0.8515, precision 91.0%, false-positive rate 7.9%. Benchmark and code linked |
 | 2603.16723 | OUT | federated learning for postoperative outcomes; `admission` is ICU admission |
 | 2603.20637 | OUT `[note]` | AEGIS, standalone vulnerability detector |
-| 2604.07666 | READ | studies verifier-noise tolerance in RLVR; may be about verifiers generally |
+| **2604.07666** | **IN** | beyond the injected-noise study, reports real model-based verifiers' own precision/recall (Qwen3-30B ≈85%/>90%, 4B ≈70%/>90%) inside their own RLVR pipeline |
 | 2604.11943 | READ | ProbeLogits, kernel-level safety check on the agent's own action |
 | 2605.01727 | OUT | measures other people's models as classifiers — third-party clause |
 | 2605.03065 | OUT | `critic` is the RL critic network |
@@ -101,7 +106,7 @@ this note specifically.**
 | 2607.20852 | READ | can a weaker LLM verifier catch residual bugs; benchmark of verifiers generally |
 | 2607.25069 | READ | CheckThat! system; the verifier *is* the system, likely OUT under the note |
 
-**Stage 1 totals: 20 OUT · 1 IN · 29 to read.**
+**Stage 1 progress: 22 OUT · 5 IN · 23 still to read.** (updated as papers are resolved)
 
 Of the 20 exclusions: 8 under the interpretive note (standalone detectors), 4 under the
 contract's third-party clause, 1 survey, and 7 where the matched term was incidental —
