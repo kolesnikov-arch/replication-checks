@@ -15,15 +15,27 @@ This is a base rate over a population. It is not a ranking, and it does not asse
 any published number is correct — only whether it is checkable by someone who was not
 there.
 
-## Why a hash and not a list
+## What the hash does, and what it does not
 
-Publishing the enumerated list before collection would change the thing being measured:
-an author who sees a forthcoming audit can add telemetry to their repository, and the
-result would then measure reactions to this survey rather than the state of the practice.
+**Corrected 2026-08-02, before collection.** An earlier draft of this section claimed the
+hash keeps the population hidden from the papers' authors. That claim was wrong and is
+withdrawn.
 
-So: the selection **rule** is public now; the **list** is frozen, its SHA256 published at
-freeze, and the list itself released with the results. Anyone can then verify it was not
-edited. Same primitive as the evidence attestation used elsewhere in this work.
+`select.py` is public, and it is the definition of record. Anyone — including any author
+in scope — can run it and derive the same list, seed included. **The population is
+knowable by construction, and that is accepted deliberately:** a selection rule that is
+not public is not a pre-registration, it is a promise.
+
+What the hash actually does is **bind the author of this survey, not its subjects.** It
+proves the sample was not trimmed, extended or re-drawn after the determinations started
+to come in — which is the first thing a reader should suspect and the only thing a
+commitment device can settle. The list is published with the results so that the
+commitment can be checked.
+
+The real protection against a repository quietly gaining the missing fields after this
+frame existed is not secrecy but **pinning**: every artifact is fixed to a commit SHA or
+version at the collection date, and any later addition is visible as a change after that
+pin. That is stated under *Determination* below and is not optional.
 
 ## Selection frame — fixed here, before collection
 
