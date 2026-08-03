@@ -67,29 +67,29 @@ this note specifically.**
 | 2603.16723 | OUT | federated learning for postoperative outcomes; `admission` is ICU admission |
 | 2603.20637 | OUT `[note]` | AEGIS, standalone vulnerability detector |
 | **2604.07666** | **IN** | beyond the injected-noise study, reports real model-based verifiers' own precision/recall (Qwen3-30B ≈85%/>90%, 4B ≈70%/>90%) inside their own RLVR pipeline |
-| 2604.11943 | READ | ProbeLogits, kernel-level safety check on the agent's own action |
+| **2604.11943** | **IN** | ProbeLogits reports its own gate metrics: F1 0.980 / precision 1.000 / recall 0.960 on 260 OS actions, and ≈22% false-positive rate on ToxicChat. No artifacts mentioned |
 | 2605.01727 | OUT | measures other people's models as classifiers — third-party clause |
 | 2605.03065 | OUT | `critic` is the RL critic network |
-| 2605.06669 | READ | authors' own multi-layer safeguard inside an LLM tutor |
-| 2605.19075 | READ | CRAFT critic loop verifying its own claims; headline is end-task |
-| 2605.31446 | READ | post-hoc verification of the system's own extracted triplets — target shape |
+| **2605.06669** | **IN** | safeguard pipeline's own numbers: 46.34% bypass, 0.00% false positives, 111/111 benign passed, 198/369 attacks blocked. Code and data linked |
+| 2605.19075 | OUT | ablation reports only end-task citation F1 (0.635 → 0.601); the critic's own accept/reject accuracy is never measured. Code released, but no claim to check |
+| 2605.31446 | OUT | all reported metrics are end-to-end ASTE F1 after filtering; verifier-only decision quality absent |
 | 2606.05185 | OUT | `guard` is a product name (Event Guardian); crowd-monitoring CV |
 | 2606.15833 | READ | asks whether textual verifiability tracks correctness, against gold triples |
 | 2606.21690 | OUT `[note]` | phishing pipeline; `Domain Guard` is a component name, engines benchmarked standalone |
-| 2606.21724 | READ | DISC verify-judge-correct loop over its own reasoning — target shape |
+| **2606.21724** | **IN** | DISC reports judge precision 71.3% / recall 85.6%, true-positive fix rate 66.2%, false-positive destruction rate 54.8%. No artifacts mentioned |
 | 2606.26686 | OUT `[note]` | LeanGuard, standalone guardrail |
 | 2607.07146 | OUT | the `validator` is a human expert adjudicating, not a component |
 | 2607.19396 | OUT | benchmark evaluating PromptGuard and baselines — third-party clause |
 | 2509.18868 | OUT | survey/taxonomy of LLM memory — surveys excluded by contract |
 | 2510.11822 | READ | agreeableness bias in LLM judges; own mitigation vs third-party measurement unclear |
 | 2510.21272 | READ | PMDetector, DeFi price manipulation; likely standalone |
-| 2511.22521 | READ | DocVAL, a validator filtering the system's own teacher CoT — target shape |
+| 2511.22521 | OUT | reports only a 92.7% retention rate — how often the validator fired, not how often it was right — plus downstream mAP. Artifacts *are* released; there is simply no claim about the validator to check |
 | 2602.07954 | OUT `[note]` | Bielik Guard, standalone safety classifiers |
 | 2602.10494 | READ | Canvas of Thought; `validator` role inside the reasoning loop |
 | 2602.11731 | READ | optical decompression; term match looks incidental |
 | 2603.12071 | READ | LoV3D brain-MRI pipeline; mentions hallucination control |
 | 2605.00034 | READ | symbolic execution + agents including an Oracle/Validator and Safety Checker |
-| 2605.01740 | READ | four failure modes of an agentic runtime, confusion matrices per cell — but measured on *upstream OpenClaw* |
+| **2605.01740** | **IN** | measures upstream OpenClaw *and* the authors' own hardened runtime: precision = recall = F1 = 1.000 per F-category at n=1600, Wilson bound 3.84e-4 at n=10,000. Public harness plus a CSV of per-sample ground truth and per-subject decisions |
 | 2605.14665 | READ | Falkor-IRAC, graph-constrained legal generation with verification |
 | 2605.24834 | OUT `[note]` | Reflect-Guard, standalone safety classifier |
 | 2605.25447 | OUT | GeoSVG-RL; `precision` is geometric, `critic` is RL |
@@ -98,15 +98,24 @@ this note specifically.**
 | 2606.09266 | OUT | acoustic metamaterial inverse design |
 | 2606.09278 | OUT | geometric synthesis; `precision` is numerical |
 | **2606.09682** | **IN** | AutoMegaKernel: a frozen schedule-IR validator certifies agent-proposed schedules; **"across 7,160 adversarial schedules (6,091 unsafe) it had zero false-accept"** — the system acts, an internal check gates it, and the check's own error count is the reported figure |
-| 2606.24124 | READ | VeryTrace, verification-and-repair over its own reasoning traces — target shape |
-| 2606.29225 | READ | PolicyGuard, a sub-agent verifier for policy adherence — target shape |
+| **2606.24124** | **IN** | VeryTrace, textbook: acceptance precision 0.895, recall 0.886, **false-accept rate 0.097**, false-reject 0.114. No artifact URL |
+| **2606.29225** | **IN** | PolicyGuard reports per-call verdict confusion matrices, policy-violation recall by vendor, block rates. Release promised, no URL |
 | 2607.06600 | OUT | MiLSD line-segment detector; `precision` is detection accuracy |
-| 2607.13716 | READ | CAVA, action verification and attestation for agent runtimes |
+| **2607.13716** | **IN** | CAVA reports its own catch rate 1.000 and false-positive control 1.000 over 96 seeds / 384 variants. Harness and REPRODUCE.md referenced; parser packs and policy thresholds proprietary |
 | 2607.17987 | READ | relational inconsistency analysis of smart contracts |
 | 2607.20852 | READ | can a weaker LLM verifier catch residual bugs; benchmark of verifiers generally |
 | 2607.25069 | READ | CheckThat! system; the verifier *is* the system, likely OUT under the note |
 
-**Stage 1 progress: 22 OUT · 5 IN · 23 still to read.** (updated as papers are resolved)
+**Stage 1 progress: 25 OUT · 12 IN · 13 still to read.** (updated as papers are resolved)
+
+**Descriptive by-product, not the pre-registered question.** A pattern is showing among
+the papers read in full: several build a verification component and report only what the
+end task scores with and without it — CRAFT, the ASTE verifier, DocVAL. Their verifier is
+never measured, only credited. That is the same practice this survey's first deep check
+found in a production system, and it will be reported as an observation with its count,
+never as the headline: the contract asks about computability among papers that *do*
+report, and retrofitting a nicer question after seeing the data is the one move the whole
+protocol exists to prevent.
 
 Of the 20 exclusions: 8 under the interpretive note (standalone detectors), 4 under the
 contract's third-party clause, 1 survey, and 7 where the matched term was incidental —
