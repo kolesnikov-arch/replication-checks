@@ -141,5 +141,28 @@ keeping the term lists frozen after v1, as stated in the contract.
 
 ## Stage 2 — determinations
 
-Not started. Begins once inclusion is settled for all 50, so the denominator is fixed
-before any artifact is opened.
+Denominator fixed at 15 before the first artifact was opened. Each artifact pinned by
+commit at the collection date, per the contract.
+
+| id | artifact @ pin | state | which condition fails |
+|---|---|---|---|
+| **2605.06669** | `alemaiorano/educational-llm-guardrails-bench` @ `51628e8f0ae7` | **COMPUTABLE** | none — and **reproduced**: 369 injections / 198 blocked = 46.34% bypass, 111 benign / 0 blocked = 0.00% FPR. Every published figure recomputed exactly from `results/eval_multi-layer.csv` |
+| **2605.01740** | `enclawed/enclawed-oss` @ `2876530a5339` | **COMPUTABLE** | none — and **reproduced**: from `docs/adversarial-in-vivo-samples.csv` (1,600 rows, 800 legit / 800 adversarial) OpenClaw recall 0.000, both hardened subjects precision = recall = 1.000. Matches the paper |
+| 2603.04549 | `GuilinDev/Adaptive_Memory_Admission_Control_LLM_Agents` @ `40407aec883b` | RELEASED, NOT COMPUTABLE | **A, B, C.** 20 files, zero data files. Code only: scorers, features, baselines. The ~1,500 ground-truth admission labels and the controller's per-item decisions are not in the release |
+| 2603.13247 | `Athonitul/ilion-framework-simulator` @ `94efd5cc3101` | RELEASED, NOT COMPUTABLE | **B, C.** `benchmark/benchmark_v2.csv` gives 400 cases with `expected_verdict` — ground truth is there — but nothing records what the gate actually decided. A benchmark specification, not a run record |
+| 2606.09682 | `RightNow-AI/AutoMegaKernel` @ `a514bbc20a03` | RELEASED, NOT COMPUTABLE | **A, and C.** `paper/results/validator_soundness.json` is unusually complete — full confusion matrix, breakdowns by mutant class and reject reason, an explicitly empty `false_accepts` list — but it is aggregate, with no per-schedule record. And condition A fails on the authors' own disclosure: *"The E2 dynamic oracle shares code with the system"*, so ground truth is not independent of the system being judged. Recorded on their statement, not our inference |
+| 2602.24111 | — | pending | |
+| 2602.11731 | — | pending | |
+| 2604.07666 | — | pending | |
+| 2604.11943 | — | pending | |
+| 2605.14665 | — | pending | |
+| 2606.15833 | — | pending | |
+| 2606.21724 | — | pending | |
+| 2606.24124 | — | pending | |
+| 2606.29225 | — | pending | |
+| 2607.13716 | — | pending | |
+
+**5 of 15 determined: 2 COMPUTABLE (both reproduced), 3 RELEASED-NOT-COMPUTABLE.**
+
+Nothing is inferred from a missing URL: a paper is only `NOT RELEASED` once the absence has
+been checked, not once a fetch failed to show a link.
