@@ -1,39 +1,9 @@
-# Survey — self-reported verifier claims: pre-registered frame (v2)
+# Survey — self-reported verifier claims: pre-registered frame
 
 **Frozen before collection.** The selection rule below is committed first; the enumerated
 list of papers it produces is committed as a **hash only** and revealed with the results.
 Nothing here is revised after any determination is made; a change requires a new version
 of this file stating why, with the previous version retained.
-
----
-
-## v2 — why this version exists
-
-**v1 is retained verbatim in [CONTRACT-v1.md](CONTRACT-v1.md). Its frame hash
-`d50b15e8…46fbba` is void as a frame and is kept only as a record of what was frozen.**
-
-v1's matcher tested whether a term appeared **anywhere in the abstract as a substring**.
-It therefore matched `critic` inside `critical` and `criticism`. Measured on the retrieved
-cache: **1,109 of the 1,382 papers in the v1 frame — 80% — contained no such term at all.**
-The v1 sample of 25 was accordingly dominated by papers on angiography, astrocyte imaging,
-robot badminton and 4-bit quantization, of which exactly one was on topic.
-
-**What changed:** term matching now requires word boundaries. That is all.
-
-**What deliberately did not change:** the term lists, the categories, the window, the
-inclusion and exclusion rules, the sample cap and the seed. Matching a substring is not
-applying the rule this contract states, so fixing it is a defect repair in the instrument.
-Editing the *terms* would be something else entirely — by now their weaknesses are known
-**from the data**, and a rule rewritten around observed output is no longer pre-registered.
-
-**A known weakness is therefore carried into v2 on purpose.** `precision` and `recall` are
-ambiguous: in a quantization paper `precision` means bit width. Those papers still enter
-the frame. They are removed at the reading stage under the inclusion rule, **each with its
-reason logged**, and the count of such removals is published. The result then carries two
-numbers — how many the frame admitted, and how many actually report a figure about their
-own verification component — because either alone would mislead.
-
-This amendment was made **before any determination**. No finding rests on the v1 frame.
 
 ## Question — one
 
@@ -85,11 +55,9 @@ leave by being posted after the rule existed.
 - claim: `false accept`, `false alarm`, `false positive`, `precision`, `recall`,
   `catch rate`, `confusion matrix`, `detection rate`
 
-Matching is case-insensitive on the abstract text as returned by the API, **requires word
-boundaries** (v2 — `critic` does not match `critical`), and treats a hyphen and a space as
-equivalent on both sides, so that `self-check`, `self check` and a line-wrapped `self-
-check` are one term. The retrieval script is committed with this contract and is the
-definition of record; where prose and script disagree, the script governs.
+Matching is case-insensitive on the abstract text as returned by the API. The retrieval
+script is committed with this contract and is the definition of record; where prose and
+script disagree, the script governs.
 
 **Inclusion.** The paper reports at least one quantitative figure describing how well its
 **own** verification component performs — not the end-task score the system achieves with
@@ -146,9 +114,8 @@ Its determination is recomputed under the conditions above, not carried over.
 ## Right of reply — deliberately lighter than a deep check
 
 The per-check policy in this repository sends the result to the authors before publication
-with 14 days. Applied to a survey of 25 papers that would mean 25 advance letters — a
-volume of unsolicited mail that turns a measurement into an outreach campaign, and one
-that would reach authors before any determination about them had been made.
+with 14 days. Applied to a survey of 25 papers that would mean 25 advance letters, which
+is precisely the leakage the hash exists to prevent.
 
 So, for the survey only:
 
@@ -188,12 +155,11 @@ checks keep the strict policy unchanged.**
 | | |
 |---|---|
 | frame frozen on | 2026-08-02 |
-| frame rule frozen at commit | `74fbef2` (v1) · word-boundary repair in v2, this commit |
+| frame rule frozen at commit | `74fbef2` — `select.py` first committed |
 | collection ran at commit | `35016ec` |
-| **enumerated list SHA256 (v2, binding)** | **`c1dceec6b1d46d2a94c93578b1b6c5a0af5061945683649705b6c5cbaebc3b04`** |
-| ~~v1 hash~~ | ~~`d50b15e8…46fbba`~~ — void as a frame, see the v2 note above |
+| **enumerated list SHA256** | **`d50b15e8b6810eaabc0c7198b85fc50f23c00c8078a9dd8d442b0db7ad46fbba`** |
 | candidates retrieved | 33,805 |
-| in frame before sampling | **168** (v1: 1,382, of which 1,109 were substring artefacts) |
+| in frame before sampling | 1,382 |
 | sampled | 25, `seed=20260802` |
 | list revealed | with the published result |
 

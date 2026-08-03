@@ -85,9 +85,22 @@ def _norm(text: str) -> str:
 
 
 def matched_terms(text: str, terms: list[str]) -> list[str]:
-    """Terms are normalised too — matching is symmetric or it is not a rule."""
+    """Terms are normalised too — matching is symmetric or it is not a rule.
+
+    Word boundaries are required (v2, see CONTRACT.md). Without them `critic`
+    matched `critical` and `criticism`, which accounted for 1,109 of the 1,382
+    papers the v1 frame contained — 80% of it, none of them mentioning the term
+    at all. Matching a substring is not applying the rule the contract states;
+    this is a defect in the instrument, fixed, and not a change to what the rule
+    selects for. The term lists are unchanged.
+    """
     haystack = _norm(text)
-    return [t for t in terms if _norm(t) in haystack]
+    out = []
+    for t in terms:
+        pattern = r"\b" + re.escape(_norm(t)) + r"\b"
+        if re.search(pattern, haystack):
+            out.append(t)
+    return out
 
 
 def in_frame(rec: dict) -> tuple[bool, list[str], list[str]]:
