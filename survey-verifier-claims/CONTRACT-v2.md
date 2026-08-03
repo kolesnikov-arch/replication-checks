@@ -1,46 +1,3 @@
-# Survey — self-reported verifier claims: pre-registered frame (v3)
-
-## v3 — the sample was sized by effort, not by precision
-
-**v2 is retained in [CONTRACT-v2.md](CONTRACT-v2.md); its frame hash `c1dceec6…bc3b04`
-covers a sample that is a strict subset of this one.** Nothing drawn under v2 was dropped.
-
-The cap of 25 was chosen when this contract was drafted, on how many papers could be read
-in an evening. That is not a reason, and it does not survive contact with what the
-inclusion pass showed: **roughly half the sample falls out at stage 1** — `admission` turns
-out to be hospital admission, `critic` an actor–critic network. Twenty-five drawn leaves
-about twelve to determine.
-
-What each surviving denominator buys, at a hypothetical true rate near 20%:
-
-| surviving n | Clopper–Pearson 95% | width |
-|---|---|---|
-| 12 | [2.1%, 48.4%] | 46 pp |
-| 25 | [6.8%, 40.7%] | 34 pp |
-| 50 | [10.0%, 33.7%] | 24 pp |
-| 84 (whole frame) | [12.7%, 29.2%] | 16 pp |
-
-An interval from 2% to 48% is not a measurement. **v3 raises the cap to 50.**
-
-**Why this is admissible and not tuning.** The change was made after seeing the *exclusion
-rate* and before any determination existed. It moves precision, never direction: a larger
-sample cannot pull the rate toward a preferred answer. And the mechanism forbids the abuse
-outright — **the sample is extended, never re-drawn.** The v2 draw of 25 is reproduced
-exactly and the remainder drawn from what is left with the same generator, so a paper once
-drawn can never be dropped by raising the cap. Verified after the change: all 25 v2 ids are
-present in the v3 list, 25 added, none lost.
-
-**Stopping is fixed in advance, to remove the temptation to stop on a pleasing number.**
-The result is published at 50 regardless of what it says. Any further extension toward the
-full frame of 168 is a further declared version of this file, made before its
-determinations, never a quiet continuation.
-
-**And the honest fallback.** If the surviving denominator still leaves an interval too wide
-to support a claim, *that* is published — "this population is too small to state a rate at
-useful precision" — rather than repaired by extending until the number firms up.
-
----
-
 # Survey — self-reported verifier claims: pre-registered frame (v2)
 
 **Frozen before collection.** The selection rule below is committed first; the enumerated
@@ -233,12 +190,11 @@ checks keep the strict policy unchanged.**
 | frame frozen on | 2026-08-02 |
 | frame rule frozen at commit | `74fbef2` (v1) · word-boundary repair in v2, this commit |
 | collection ran at commit | `35016ec` |
-| **enumerated list SHA256 (v3, binding)** | **`f97c68ded95ba8c3c236c985e1063d83ffc1bfc74e319883b47ee61c626943fe`** |
-| v2 hash | `c1dceec6…bc3b04` — its 25 are a strict subset of the v3 list, verified |
+| **enumerated list SHA256 (v2, binding)** | **`c1dceec6b1d46d2a94c93578b1b6c5a0af5061945683649705b6c5cbaebc3b04`** |
 | ~~v1 hash~~ | ~~`d50b15e8…46fbba`~~ — void as a frame, see the v2 note above |
 | candidates retrieved | 33,805 |
 | in frame before sampling | **168** (v1: 1,382, of which 1,109 were substring artefacts) |
-| sampled | **50**, `seed=20260802` (25 from v2 + 25 deterministic extension) |
+| sampled | 25, `seed=20260802` |
 | list revealed | with the published result |
 
 Verify the hash against the file when it is released: `sha256sum frame.txt`. The bytes

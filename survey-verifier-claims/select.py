@@ -53,7 +53,8 @@ CLAIM_TERMS = [
     "catch rate", "confusion matrix", "detection rate",
 ]
 
-SAMPLE_CAP = 25
+SAMPLE_CAP = 50          # v3; was 25 in v1/v2 — see CONTRACT.md
+SAMPLE_FIRST = 25        # the v2 draw, preserved verbatim inside the v3 sample
 SAMPLE_SEED = 20260802
 MIN_FRAME = 10        # below this the frame is too narrow — see stop conditions
 
@@ -293,9 +294,19 @@ def main() -> int:
 
     sampled = frame
     if len(frame) > SAMPLE_CAP:
+        # Extend, never re-draw. The v2 sample of SAMPLE_FIRST is reproduced
+        # exactly, then the remainder is drawn from what is left using the same
+        # generator. Raising the cap can therefore never drop a paper already
+        # drawn — which is the only reason raising it mid-survey is admissible
+        # at all. Verified: the v2 list is a subset of this one.
         rnd = random.Random(SAMPLE_SEED)
-        sampled = sorted(rnd.sample(frame, SAMPLE_CAP), key=lambda x: x["id"])
-        print(f"выборка {SAMPLE_CAP} со seed={SAMPLE_SEED}")
+        first = rnd.sample(frame, min(SAMPLE_FIRST, len(frame)))
+        taken = {r["id"] for r in first}
+        rest = [r for r in frame if r["id"] not in taken]
+        extra = rnd.sample(rest, min(SAMPLE_CAP - len(first), len(rest)))
+        sampled = sorted(first + extra, key=lambda x: x["id"])
+        print(f"выборка {len(sampled)} со seed={SAMPLE_SEED} "
+              f"({len(first)} из v2 + {len(extra)} продление)")
 
     # Canonical form: one id per line, sorted. This exact text is what is hashed.
     canonical = "\n".join(r["id"] for r in sampled) + "\n"
