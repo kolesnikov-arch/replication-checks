@@ -1,7 +1,7 @@
 # Determinations — survey of self-reported verifier claims
 
-Frame v2, hash `c1dceec6b1d46d2a94c93578b1b6c5a0af5061945683649705b6c5cbaebc3b04`,
-25 papers, `seed=20260802`. Contract: [CONTRACT.md](CONTRACT.md).
+Frame v3, hash `f97c68ded95ba8c3c236c985e1063d83ffc1bfc74e319883b47ee61c626943fe`,
+50 papers, `seed=20260802`. Contract: [CONTRACT.md](CONTRACT.md).
 
 Two stages per paper, both logged with a reason:
 
@@ -18,62 +18,100 @@ The contract's inclusion rule reads: *"reports at least one quantitative figure 
 how well its **own** verification component performs — not the end-task score the system
 achieves with it."*
 
-Reading the sample surfaced a boundary the rule does not settle explicitly: **what about a
-paper whose entire contribution is a detector or classifier?** Its precision is
-simultaneously the performance of a checking component and the paper's headline result.
+Reading the sample surfaced a boundary the rule does not settle: **what about a paper
+whose entire contribution is a detector or classifier?** Its precision is simultaneously a
+checking component's performance and the paper's headline result.
 
-**Reading adopted:** such papers are **out of scope**. A standalone detector has no *own*
+**Reading adopted:** those are **out of scope**. A standalone detector has no *own*
 verification component — it *is* the artifact under evaluation, scored by its authors
-against a labelled set. That is ordinary supervised evaluation, and it would swamp this
-survey with routine ML papers while diluting the question actually being asked.
+against a labelled set. That is ordinary supervised evaluation, and including it would
+swamp the survey with routine ML papers while diluting the question asked.
 
-The class this survey targets has three parts together: the system **does** something
-(generates code, answers, acts); it contains an **internal check** on its own output; and
-the paper reports **how well that internal check does**. That is the shape of the claim
-which motivated the survey — *"the verifier caught 8 of 40 errors"*, where the errors are
-the system's own.
+The class targeted has three parts together: the system **does** something (generates,
+answers, acts); it contains an **internal check** on its own output; and the paper reports
+**how well that internal check does** — *"the verifier caught 8 of 40 errors"*, where the
+errors are the system's own.
 
-**Why this is recorded rather than quietly applied:** the boundary was found by reading,
-not fixed in advance, so it is exactly the kind of decision that can be bent to produce a
-nicer number. Written down first, before any paper was resolved under it, so that a reader
-can disagree with the rule itself and re-derive the counts. Every borderline call below
-cites it.
+**Why recorded rather than quietly applied:** the boundary was found by reading, not fixed
+in advance, so it is exactly the sort of decision that can be bent toward a nicer number.
+Written down before any paper was resolved under it, so a reader can reject the rule itself
+and re-derive the counts. Every call citing it is marked `[note]`.
 
-**Known consequence, accepted:** this reading excludes some papers a reasonable person
-would include — a standalone guardrail evaluated on its own bypass rate, for instance.
-Those exclusions are logged individually with this note as the reason, and their count is
-published, so the effect of the rule on the result is visible rather than buried.
+**Known cost, accepted:** this excludes standalone guardrails a reasonable person might
+include. Those exclusions are logged individually and counted, so the rule's effect on the
+result is visible rather than buried. **20 of 50 fall out at this stage, 8 of them under
+this note specifically.**
 
 ---
 
-## Stage 1 — inclusion pass (from abstracts; borderline cases go to the paper)
+## Stage 1 — inclusion, from abstracts
 
-| # | id | call | reason |
-|---|---|---|---|
-| 1 | 2508.18513 | **OUT** | healthcare privacy / sepsis prediction. `admission` is hospital admission; `precision`/`recall` are the prediction model's. No checking component of any kind |
-| 2 | 2510.07642 | READ | generator–verifier pipeline over SQL policy. Abstract reports *system* refusal precision; whether the verifier's own decision quality is reported separately needs the results section |
-| 3 | 2512.05925 | READ | a Paper Correctness Checker applied to others' papers. Likely reports its own precision, but the object checked is third-party work — the exclusion for *"the verifier under measurement belongs to someone else"* may cut the other way. Needs the paper |
-| 4 | 2512.08326 | READ | Argus, sensitive-information leakage detection, headline is reducing false positives. Standalone detector → likely **OUT** under the interpretive note; confirming against the results section |
-| 5 | 2512.12492 | READ | detector + VLM verifier, two-stage. Abstract reports detection precision/recall (end-task). Whether the verifier's own accuracy appears needs the paper |
-| 6 | 2602.24111 | READ | neurosymbolic verifier auditing a VLM's *own* report consistency — the target shape. Needs the paper for whether the verifier's accuracy is quantified |
-| 7 | 2603.04549 | READ | A-MAC memory admission control inside an agent — the target shape. Needs the paper for a figure on the controller itself |
-| 8 | 2603.11875 | READ | Mirror prompt-injection screen, 95.97% recall / 92.07% F1 on a 524-case holdout. Standalone detector → likely **OUT** under the note; confirming |
-| 9 | 2603.13247 | READ | ILION, deterministic execution gate for agent actions. Gate sits between agent and effect — plausibly in scope; needs the paper |
-| 10 | 2603.16723 | **OUT** | federated learning for postoperative outcomes. `admission` is ICU admission. No checking component |
-| 11 | 2603.20637 | READ | AEGIS vulnerability detection. Standalone detector → likely **OUT** under the note; confirming |
-| 12 | 2604.07666 | READ | studies how much verifier noise RLVR tolerates, injecting known error rates. About verifier accuracy in general rather than a measurement of the authors' own verifier — needs the paper |
-| 13 | 2604.11943 | READ | ProbeLogits, a kernel-level safety check on an agent's action using the same model's logits. Target shape; needs the paper |
-| 14 | 2605.01727 | **OUT** | measures *other people's* models as news classifiers. Explicitly excluded: the component under measurement belongs to someone else |
-| 15 | 2605.03065 | **OUT** | `critic` is the RL critic network in an actor–critic policy. Not a checking component |
-| 16 | 2605.06669 | READ | evaluates the authors' own multi-layer safeguard inside an LLM tutor, reporting bypass and false-positive rates. Target shape; needs the paper |
-| 17 | 2605.19075 | READ | CRAFT, a critic loop that verifies and repairs claims before consolidation. Headline figures are end-task; needs the paper |
-| 18–25 | — | pending | not yet read |
+`OUT` is final. `READ` means the abstract cannot settle it and the results section decides.
 
-Counts so far: **5 OUT**, **12 to read**, 8 not yet reached.
+| id | call | reason |
+|---|---|---|
+| 2508.18513 | OUT | sepsis prediction; `admission` is hospital admission. No checking component |
+| 2510.07642 | READ | generator–verifier over SQL policy; abstract reports system refusal precision |
+| 2512.05925 | READ | checker applied to *others'* published papers — third-party clause may cut |
+| 2512.08326 | OUT `[note]` | Argus, standalone leakage detector |
+| 2512.12492 | READ | detector + VLM verifier; abstract reports end-task detection only |
+| 2602.24111 | READ | neurosymbolic verifier auditing a VLM's own report consistency — target shape |
+| 2603.04549 | READ | A-MAC memory admission control inside an agent — target shape |
+| 2603.11875 | OUT `[note]` | Mirror, standalone prompt-injection screen |
+| 2603.13247 | READ | ILION, execution gate between agent and effect |
+| 2603.16723 | OUT | federated learning for postoperative outcomes; `admission` is ICU admission |
+| 2603.20637 | OUT `[note]` | AEGIS, standalone vulnerability detector |
+| 2604.07666 | READ | studies verifier-noise tolerance in RLVR; may be about verifiers generally |
+| 2604.11943 | READ | ProbeLogits, kernel-level safety check on the agent's own action |
+| 2605.01727 | OUT | measures other people's models as classifiers — third-party clause |
+| 2605.03065 | OUT | `critic` is the RL critic network |
+| 2605.06669 | READ | authors' own multi-layer safeguard inside an LLM tutor |
+| 2605.19075 | READ | CRAFT critic loop verifying its own claims; headline is end-task |
+| 2605.31446 | READ | post-hoc verification of the system's own extracted triplets — target shape |
+| 2606.05185 | OUT | `guard` is a product name (Event Guardian); crowd-monitoring CV |
+| 2606.15833 | READ | asks whether textual verifiability tracks correctness, against gold triples |
+| 2606.21690 | OUT `[note]` | phishing pipeline; `Domain Guard` is a component name, engines benchmarked standalone |
+| 2606.21724 | READ | DISC verify-judge-correct loop over its own reasoning — target shape |
+| 2606.26686 | OUT `[note]` | LeanGuard, standalone guardrail |
+| 2607.07146 | OUT | the `validator` is a human expert adjudicating, not a component |
+| 2607.19396 | OUT | benchmark evaluating PromptGuard and baselines — third-party clause |
+| 2509.18868 | OUT | survey/taxonomy of LLM memory — surveys excluded by contract |
+| 2510.11822 | READ | agreeableness bias in LLM judges; own mitigation vs third-party measurement unclear |
+| 2510.21272 | READ | PMDetector, DeFi price manipulation; likely standalone |
+| 2511.22521 | READ | DocVAL, a validator filtering the system's own teacher CoT — target shape |
+| 2602.07954 | OUT `[note]` | Bielik Guard, standalone safety classifiers |
+| 2602.10494 | READ | Canvas of Thought; `validator` role inside the reasoning loop |
+| 2602.11731 | READ | optical decompression; term match looks incidental |
+| 2603.12071 | READ | LoV3D brain-MRI pipeline; mentions hallucination control |
+| 2605.00034 | READ | symbolic execution + agents including an Oracle/Validator and Safety Checker |
+| 2605.01740 | READ | four failure modes of an agentic runtime, confusion matrices per cell — but measured on *upstream OpenClaw* |
+| 2605.14665 | READ | Falkor-IRAC, graph-constrained legal generation with verification |
+| 2605.24834 | OUT `[note]` | Reflect-Guard, standalone safety classifier |
+| 2605.25447 | OUT | GeoSVG-RL; `precision` is geometric, `critic` is RL |
+| 2605.26663 | READ | NEI-CAP; diagnoses what a verifier's score can hide |
+| 2605.28830 | OUT | benchmarks 14 *open-source* guard models — third-party clause |
+| 2606.09266 | OUT | acoustic metamaterial inverse design |
+| 2606.09278 | OUT | geometric synthesis; `precision` is numerical |
+| **2606.09682** | **IN** | AutoMegaKernel: a frozen schedule-IR validator certifies agent-proposed schedules; **"across 7,160 adversarial schedules (6,091 unsafe) it had zero false-accept"** — the system acts, an internal check gates it, and the check's own error count is the reported figure |
+| 2606.24124 | READ | VeryTrace, verification-and-repair over its own reasoning traces — target shape |
+| 2606.29225 | READ | PolicyGuard, a sub-agent verifier for policy adherence — target shape |
+| 2607.06600 | OUT | MiLSD line-segment detector; `precision` is detection accuracy |
+| 2607.13716 | READ | CAVA, action verification and attestation for agent runtimes |
+| 2607.17987 | READ | relational inconsistency analysis of smart contracts |
+| 2607.20852 | READ | can a weaker LLM verifier catch residual bugs; benchmark of verifiers generally |
+| 2607.25069 | READ | CheckThat! system; the verifier *is* the system, likely OUT under the note |
+
+**Stage 1 totals: 20 OUT · 1 IN · 29 to read.**
+
+Of the 20 exclusions: 8 under the interpretive note (standalone detectors), 4 under the
+contract's third-party clause, 1 survey, and 7 where the matched term was incidental —
+hospital and ICU admission, an RL critic, a product name, a human adjudicator, and two
+uses of `precision` meaning numeric precision. That last group is the known cost of
+keeping the term lists frozen after v1, as stated in the contract.
 
 ---
 
 ## Stage 2 — determinations
 
-Not started. Begins once inclusion is settled for all 25, so that the denominator is fixed
+Not started. Begins once inclusion is settled for all 50, so the denominator is fixed
 before any artifact is opened.
