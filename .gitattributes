@@ -1,0 +1,8 @@
+# The published SHA256 of frame.txt is taken over the bytes on disk, and the contract
+# tells a reader to verify it with `sha256sum frame.txt` after cloning. Git must therefore
+# never rewrite its line endings on checkout: with core.autocrlf=true on Windows it did,
+# and the published hash failed to verify for every such reader. See DEFECTS.md.
+survey-verifier-claims/frame.txt -text
+
+# Same reasoning for anything else whose bytes are committed to by a published digest.
+*.txt -text

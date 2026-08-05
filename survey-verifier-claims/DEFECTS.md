@@ -125,8 +125,36 @@ as changes to how candidates were fetched. Whether the TLS change repaired an ac
 failure or was precautionary is not something the record settles, and it is not claimed as
 a defect here.
 
-**One defect of record-keeping, not of the instrument.** Recorded separately because
-calling it a sixth code defect would inflate the count above.
+**Two defects outside the instrument.** Recorded separately, because counting either as a
+sixth code defect would inflate the number above.
+
+### The published hash did not verify for anyone who cloned the repository
+
+Defect 5 was repaired in the code: `select.py` writes `frame.txt` with `newline=""`, so the
+bytes hashed are the bytes on disk. On 2026-08-05, two days after publication, a fresh
+clone was taken and the hash checked the way the contract tells a reader to check it.
+
+```
+published:      f97c68ded95ba8c3c236c985e1063d83ffc1bfc74e319883b47ee61c626943fe
+fresh clone:    9526aa8fbf5008c79013879da813c2582d8fc753c4f2a17f6e6cd1267405ab8a
+```
+
+The repository carried no `.gitattributes`, so on Windows — where `core.autocrlf` defaults
+to true — git converted every line ending on checkout. The file the author hashed and the
+file a reader downloads were different bytes.
+
+**The same failure as defect 5, through a mechanism one layer further out.** Fixing the
+writer was not enough, because the transport rewrote the file afterwards. A commitment
+device is only as good as the last thing that touches it before a stranger reads it, and
+the code was not the last thing.
+
+Repaired by pinning `-text` in `.gitattributes`, verified by cloning again.
+
+Found the same way as the entry below: by a reader following the instruction and getting a
+different answer. That is the only test that finds this class, and it is why the contract
+tells readers to run it.
+
+### An artifact pin that resolved to nothing
 
 On 2026-08-05 the artifact pin for `2604.07666` was found to be unresolvable. It had been
 written as `1b66fb59091e` — a twelve-character abbreviation, by habit from the commit SHAs
