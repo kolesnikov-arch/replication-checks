@@ -168,7 +168,16 @@ determination, a count, or the headline.**
 ## Right of reply
 
 Authors of the 14 papers in the denominator are notified at publication and have **14 days**
-to respond. Any reply is published in full and unedited in `REPLY.md`. A factual error
+to respond. Any reply is published in full and unedited in [REPLY.md](REPLY.md).
+
+> **First reply, 2026-08-05 — and it changed a release rather than a number.** The author of
+> `2607.13716` agreed the determination was fair, said the missing pointer was a gap on his
+> side, and published a public reproducibility mirror the same day. Re-checked on 2026-08-06:
+> it is now **COMPUTABLE, and recomputed** — verified twice against controls, because a green
+> tick from an author's own verifier is not evidence. **The count above stays at 2 of 14**:
+> it measures a population of releases as they stood at the frame date, and the pin exists so
+> that later additions read as later additions. The event is recorded in `REPLY.md` instead,
+> where it belongs. A factual error
 identified by an author is corrected and the correction attributed. Silence is not
 commented on.
 
