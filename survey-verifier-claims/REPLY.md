@@ -3,6 +3,30 @@
 Published in full and unedited, as promised in the contract. Notifications went out
 2026-08-05; the window runs to 2026-08-19.
 
+## Who was reachable, and who was not
+
+**Thirteen of the fourteen were notified. One was not, and that is recorded rather than
+glossed.** The result file says authors "are notified"; for `2606.24124` that is not true,
+and the reason is worth stating because it is the survey's own finding wearing a face.
+
+| paper | channel used |
+|---|---|
+| 2605.06669, 2605.01740, 2603.04549, 2603.13247, 2606.09682 | issue in the artifact repository |
+| 2604.07666 | comment on the gist linked from the paper |
+| 2602.24111, 2602.11731, 2604.11943, 2607.13716 | address printed in the paper |
+| 2606.29225 | address published by the author on his own page |
+| 2606.21724 | the author's own professional profile |
+| 2606.15833 | the corresponding author's faculty page |
+| **2606.24124** | **none found** |
+
+For `2606.24124` the paper prints no address, links no artifact, and no page was found that
+ties any of its four authors to this specific work. Guessing from a name match would have
+meant writing to a stranger about a paper he did not write, so nothing was sent.
+
+A paper whose figures cannot be recomputed and whose authors cannot be reached about it is
+the survey's thesis in miniature. It is stated here as a limitation of the notification, not
+as a criticism of anyone: an address is not an obligation.
+
 ---
 
 ## arXiv:2607.13716 — CAVA. Zexun (Jason) Wang, 2026-08-05
