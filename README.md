@@ -36,6 +36,7 @@ construction: different tasks, different oracles, different framings.
 | # | subject | claim under check | status |
 |---|---|---|---|
 | [001](001-leni/) | Leni Inc. — [arXiv:2607.17044](https://arxiv.org/abs/2607.17044) | verifier confusion matrix: catch ≈0.20, fix 0.75, false alarms ≈0/357 | **NOT COMPUTABLE** — [result](001-leni/RESULT.md) · awaiting authors' reply |
+| [002](002-enclawed/) | enclawed — [arXiv:2605.01740](https://arxiv.org/abs/2605.01740) | F1–F4 detection: upstream recall 0.000 against hardened precision = recall = 1.000 | **REPRODUCES** — every published figure recomputes; the findings are about what they measure — [result](002-enclawed/RESULT.md) · with the author, window to 2026-08-19 |
 | [survey](survey-verifier-claims/) | 14 papers publishing a figure about their own verification component | is that figure recomputable from what was released? | **2 of 14** — [result](survey-verifier-claims/RESULT.md) · authors notified at publication, 14 days to correct |
 
 Each check lives in its own directory:
