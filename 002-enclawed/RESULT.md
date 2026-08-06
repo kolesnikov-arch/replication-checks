@@ -6,6 +6,12 @@ lets a third party establish.
 
 Protocol frozen before the release was opened: [CONTRACT.md](CONTRACT.md), commit `8d3edc8`.
 What was actually done, including a near-miss of my own: [METHOD.md](METHOD.md).
+**Every number below recomputes from two stdlib scripts** —
+[`artifacts/recompute.py`](artifacts/recompute.py) and
+[`artifacts/recompute_q4.py`](artifacts/recompute_q4.py). This check told four papers that a
+figure nobody can recompute is not a figure; publishing its own without the means to redo
+them would have been indefensible. The first script verifies the release's SHA-256 against
+the pin before reading a byte, and refuses to run on a mismatch.
 Artifact pinned at `enclawed/enclawed-oss` @ `2876530a5339`; the CSV analysed hashes to
 `d966b4c1…7fbaea4` both in the working tree and in the pinned commit object.
 
