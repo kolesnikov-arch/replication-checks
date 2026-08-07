@@ -5,9 +5,8 @@ Published in full and unedited, as promised in the contract. Notifications went 
 
 ## Who was reachable, and who was not
 
-**Thirteen of the fourteen were notified. One was not, and that is recorded rather than
-glossed.** The result file says authors "are notified"; for `2606.24124` that is not true,
-and the reason is worth stating because it is the survey's own finding wearing a face.
+Thirteen of the fourteen were notified. One was not. The result file says authors "are
+notified"; for `2606.24124` that is not accurate, so the reason is recorded here.
 
 | paper | channel used |
 |---|---|
@@ -23,9 +22,8 @@ For `2606.24124` the paper prints no address, links no artifact, and no page was
 ties any of its four authors to this specific work. Guessing from a name match would have
 meant writing to a stranger about a paper he did not write, so nothing was sent.
 
-A paper whose figures cannot be recomputed and whose authors cannot be reached about it is
-the survey's thesis in miniature. It is stated here as a limitation of the notification, not
-as a criticism of anyone: an address is not an obligation.
+This is stated as a limitation of the notification, not as a criticism. Publishing a contact
+address is not an obligation.
 
 ---
 

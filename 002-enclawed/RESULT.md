@@ -1,19 +1,19 @@
 # Check 002 — enclawed, arXiv:2605.01740: result
 
-**Every published figure in this paper reproduces from the released files.** Not one number
-was found to be wrong. What follows is about what those numbers measure and what the release
+Every published figure in this paper reproduces from the released files. No number was found
+to be wrong. The findings below are about what those numbers measure and what the release
 lets a third party establish.
 
 Protocol frozen before the release was opened: [CONTRACT.md](CONTRACT.md), commit `8d3edc8`.
-What was actually done, including a near-miss of my own: [METHOD.md](METHOD.md).
-**Every number below recomputes from two stdlib scripts** —
+What was done, including an error of my own: [METHOD.md](METHOD.md).
+
+Every number below recomputes from two stdlib scripts,
 [`artifacts/recompute.py`](artifacts/recompute.py) and
-[`artifacts/recompute_q4.py`](artifacts/recompute_q4.py). This check told four papers that a
-figure nobody can recompute is not a figure; publishing its own without the means to redo
-them would have been indefensible. The first script verifies the release's SHA-256 against
-the pin before reading a byte, and refuses to run on a mismatch.
-Artifact pinned at `enclawed/enclawed-oss` @ `2876530a5339`; the CSV analysed hashes to
-`d966b4c1…7fbaea4` both in the working tree and in the pinned commit object.
+[`artifacts/recompute_q4.py`](artifacts/recompute_q4.py). The first verifies the release's
+SHA-256 against the pin before reading it and exits on a mismatch.
+
+Artifact pinned at `enclawed/enclawed-oss` @ `2876530a5339`. The CSV analysed hashes to
+`d966b4c1…7fbaea4` in both the working tree and the pinned commit object.
 
 ## Outcome per question
 
@@ -36,23 +36,22 @@ with **zero** false positives across 200 legitimate samples per category. The ro
 into exactly 16 cells of exactly 100 — `channel × fCat × label` — matching the paper's
 *n* = 1600 at *n* = 100 per cell.
 
-**Q3b deserves to be stated as prominently as anything critical here**, because it answers an
-objection this check was written to press. The obvious weakness of "a grep for seven symbols
-found nothing" is that a different runtime may implement the same property under another
-name. §4.1 anticipates it:
+Q3b answers an objection this check was written to press, so it is stated here rather than
+further down. A grep for seven symbols cannot distinguish a missing property from one
+implemented under a different name. §4.1 addresses that:
 
 > *"Second, the subject's user-facing documentation, plugin SDK reference, and API surface
 > … is read to confirm whether any equivalent primitive ships under a different name — so a
 > runtime that implements the same contract under a non-canonical symbol would still register
 > as 'present'. Both stages must miss the primitive for the cell to read absent."*
 
-That is a better protocol than the abstract's phrasing suggests, and most papers in the
-survey this check grew out of had nothing comparable.
+The two-stage procedure is broader than the abstract's wording suggests. Most papers in the
+survey that led to this check documented nothing comparable.
 
 ## Q2 — what the 1.000 measures
 
-For three of four categories the adversarial class is **defined by containing an item from
-the catalog the detector matches on**, and the authors document this in the released harness:
+For three of four categories the adversarial class is defined by containing an item from the
+catalog the detector matches on. The authors document this in the released harness:
 
 > *"…we synthesize adversarial samples from a parameterized template that ALWAYS hits the
 > production gate stack. Each sample randomizes across the gate's own detection patterns so
@@ -67,27 +66,25 @@ The generators draw straight from the detector's vocabulary: `T_F1_VERBS` is
 `github-token` entries of `src/enclawed/dlp-scanner.ts`. The LLM-sourced path instructs the
 model to insert the same strings.
 
-**Nothing was concealed.** The authors' own description of what they measured — *"the
-PRECISION of the gate, not the willingness of the LLM"* — is narrower and more defensible
-than the paper's. The finding is that **the disclosure does not travel with the number**:
-the abstract reads *"both hardened subjects reach P = R = accuracy = 1.000"* beside
-*"OpenClaw catches none of them"*, with Wilson intervals attached, and a reader of the paper
-alone will take 1.000 as detection ability rather than as a regression test over templates
-built to fire.
+Nothing is concealed. The authors' own description of what they measured — *"the PRECISION
+of the gate, not the willingness of the LLM"* — is narrower than the paper's. The finding is
+that this description does not appear alongside the number. The abstract reads *"both
+hardened subjects reach P = R = accuracy = 1.000"* next to *"OpenClaw catches none of them"*,
+with Wilson intervals attached. A reader of the paper alone will take 1.000 as detection
+ability rather than as a regression test over templates built to fire.
 
-**F2_FORGE is the exception and it is a real measurement.** The harness appends an
+F2_FORGE is the exception and is a real measurement. The harness appends an
 `irreversible.executed` audit record with no matching corpus-delta entry and
 `checkBiconditional` catches it; the comment states *"F2 is content-agnostic; the message
-body itself is benign."* The released data confirms it independently: **42 message texts
-appear in F2 as both adversarial and legit**, so the two classes are textually inseparable,
-and the subject still separates them 200/0 and 0/200. That is the strongest result in the
-paper and it does not depend on the shared catalog at all.
+body itself is benign."* The released data confirms this independently: 42 message texts
+appear in F2 as both adversarial and legit, so the classes are textually inseparable, and the
+subject still separates them 200/0 and 0/200. This result does not depend on the shared
+catalog.
 
 ## Q3a — the upstream side cannot be reproduced
 
-The reproducibility apparatus here is unusually thorough: seeded PRNG for byte-for-byte
-replay, hardware fingerprint, Node version, harness git commit. All of it pins **the
-authors' own side**.
+The reproducibility apparatus is thorough: seeded PRNG for byte-for-byte replay, hardware
+fingerprint, Node version, harness git commit. All of it pins the authors' own side.
 
 The upstream subject is whatever checkout sits at `$ENCLAWED_PATH`. No upstream commit,
 tag or version is recorded anywhere in the paper or the release. So neither *recall = 0.000*
@@ -96,10 +93,9 @@ know which upstream state to build.
 
 For scale, the same file filter the paper specifies (`*.ts, *.tsx, *.mjs, *.js, *.cjs`,
 excluding `node_modules`, `dist`, `build`, `out`, `coverage`) applied to `openclaw/openclaw`
-today returns **25,339** first-party files against the paper's 14,419. **This is not offered
-as a discrepancy.** The repository is under daily development and the paper is roughly three
-months old; the divergence is what one expects, and it is exactly why the missing pin
-matters.
+today returns 25,339 first-party files against the paper's 14,419. This is not offered as a
+discrepancy. The repository is under daily development and the paper is about three months
+old, so divergence is expected. It is stated to show why the missing pin matters.
 
 ## Q4 — the improvability claim: direction yes, magnitude no
 
@@ -120,16 +116,15 @@ The mechanism, the direction and the unchanged precision all hold. The magnitude
 match, and the release does not permit resolving why, because the two runs cover different
 cells.
 
-**A hazard worth publishing:** pooling the two sets naively — as I did first — yields
-**−43%**, because the post set is roughly half the size on several models and nearly absent
-on telegram. That number is an artefact of unequal denominators, and reporting it would have
-been a serious and unfair error. It is recorded here because the next person to check this
-will hit the same trap.
+One hazard, recorded because the next person checking this will hit it: pooling the two sets
+without matching cells — as I did first — yields −43%, because the post set is about half the
+size on several models and nearly absent on telegram. That figure is an artefact of unequal
+denominators. Reporting it would have been a serious and unfair error.
 
 ## Q5 — the stress test is not released
 
-Table 4 reports *n* = 80,000 and carries the tightened false-positive bound. **No artifact
-behind it exists in the release.** The largest sample file is the 1,600-row headline CSV at
+Table 4 reports *n* = 80,000 and carries the tightened false-positive bound. No artifact
+behind it exists in the release. The largest sample file is the 1,600-row headline CSV at
 260 KB; a set of that shape at 80,000 rows would be roughly 13 MB, and nothing of that order
 is present under any name.
 
@@ -144,17 +139,16 @@ The Wilson arithmetic needs no data and was checked as stated. At *k* = 0:
 The n = 10⁴ figure is exact. The other two are rounded slightly low; the difference is
 immaterial to any claim.
 
-**The bound's arithmetic is not the issue. Its independence assumption is.** See below.
+The arithmetic is correct. The assumption behind it is addressed in the next section.
 
 ## Three observations the questions did not anticipate
 
-**The two hardened subjects are one subject.** `oss_delivered` equals `enc_delivered` on all
-1,600 rows, and `oss_block_reason` equals `enc_block_reason` on all 1,600 rows — identical
-strings, no exceptions. Presented as two subjects independently reaching 1.000, they are one
-result printed twice.
+The two hardened subjects give identical results. `oss_delivered` equals `enc_delivered` on
+all 1,600 rows, and `oss_block_reason` equals `enc_block_reason` on all 1,600 rows, with no
+exceptions. Reported as two subjects independently reaching 1.000, they are one result stated
+twice.
 
-**The denominators are inflated by repeated stimuli.** Distinct message texts per cell of
-200:
+The denominators contain repeated stimuli. Distinct message texts per cell of 200:
 
 | category | distinct adversarial | distinct legit |
 |---|---|---|
@@ -163,18 +157,17 @@ result printed twice.
 | F3_SILENT | **7** | 192 |
 | F4_WRONGTGT | **40** | **6** |
 
-The sample-size argument treats rows as independent trials — that is what a Wilson bound at
-*k* = 0 over *n* means, and it is why the paper pushes *n* to 80,000. But "zero false
-positives out of 200" in F4 is zero false positives across **six distinct legitimate
-messages**, each presented about thirty-three times. Repeating a stimulus does not add
-information about how often a *different* legitimate message would be blocked. Extending to
-larger *n* tightens a bound whose denominator is mostly duplicates.
+A Wilson bound at *k* = 0 over *n* treats the rows as independent trials, which is the basis
+for extending *n* to 80,000. "Zero false positives out of 200" in F4 is zero false positives
+across six distinct legitimate messages, each presented about thirty-three times. Repeating a
+stimulus adds no information about how often a different legitimate message would be blocked,
+so a larger *n* tightens a bound over a denominator that is mostly duplicates.
 
-**The released content is redacted exactly where the detector fired.** `[REDACTED]` appears
-in 200/200 adversarial rows of F3 and F4 and in 0/200 legit rows of either. So on the
-released file a one-token rule separates the classes, and no detection decision can be
-re-derived from the content column: the substring that triggered it was removed before
-release. The decisions are auditable; the inputs behind them are not.
+The released content is redacted at the point where the detector fired. `[REDACTED]` appears
+in 200/200 adversarial rows of F3 and F4 and in 0/200 legit rows of either. On the released
+file a one-token rule separates the classes, and no detection decision can be re-derived from
+the content column, because the substring that triggered it was removed before release. The
+decisions can be audited; the inputs behind them cannot.
 
 ## What this check does not say
 
@@ -202,9 +195,22 @@ dated correction against the text below, with his name on it.
 What it does not change: the length of the window, the promise to publish his reply in full
 and unedited, or the promise that a correction he supplies is attributed to him.
 
-**Nothing about the findings changed.** This text is byte-for-byte the text sent to the
-author; its SHA-256 travels in that letter and in the commit message that published it, so
-any later edit is visible against a figure fixed on the day, rather than silent.
+### The published hash changed on 2026-08-07, and here is why
+
+The text sent to the author hashed to
+`357d4232ff5aaa0488469657e4140415dd86732f3585539429bc1ce7a7bba559` over LF line endings, and
+that figure was published in the letter and in the commit message so that any later edit
+would be visible rather than silent.
+
+It was edited on 2026-08-07 and no longer matches. The new digest is recorded in the commit
+message of that edit rather than here, because a file cannot state its own hash.
+
+The edit was to the prose only. No verdict, number, quotation or determination changed. The
+wording was made plainer: rhetorical framing removed, emphasis reduced, sentences shortened.
+The diff is in the repository history.
+
+The mechanism did what it was for. A hash mentioned only when nothing has changed is
+decoration.
 
 ## Right of reply
 

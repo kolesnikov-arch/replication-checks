@@ -1,43 +1,36 @@
 # Check 002 — what was actually done
 
-Contract frozen at `8d3edc8` and pushed **before** the release was opened. Everything below
-happened after that commit.
+Contract frozen at `8d3edc8` and pushed before the release was opened. Everything below
+happened after that commit. All five questions are resolved.
 
-**Status: all five questions resolved.**
+## Deviation from the contract
 
-## Deviation, recorded first because it is the largest one
+The contract prohibits *"Publishing before the reply window closes."* This check was
+published on 2026-08-05, the same day the author was notified. The window runs to 2026-08-19.
 
-The contract prohibits *"Publishing before the reply window closes."* **This check was
-published on 2026-08-05, the same day the author was notified.** The window had not closed
-and will not until 2026-08-19.
+The deviation was deliberate and it is mine. It is recorded here and in the result, and the
+contract was not edited afterwards to accommodate it. The cost to the author is stated in the
+result: an error he identifies is now corrected in public and dated, rather than before
+publication.
 
-The deviation was deliberate and it is mine. It is written into the result as well as here,
-and the contract was **not** edited afterwards to accommodate it — a frozen protocol amended
-to match what was done stops being a protocol. The concrete cost to the author is stated in
-the result: an error he identifies is now corrected in public and dated, rather than fixed
-before anyone read it.
-
-Recorded because an unrecorded deviation from a frozen protocol is the exact defect this
-repository exists to find in other people's work.
-
-## Provenance of every byte examined
+## Provenance of the data
 
 The clone aborted part-way through checkout on Windows, leaving an incomplete working tree.
-Rather than trust it, every artifact below was read **from the pinned commit object**:
+Every artifact below was therefore read from the pinned commit object rather than from the
+working tree:
 
 ```
 git cat-file -p 2876530a5339:docs/adversarial-in-vivo-samples.csv
 ```
 
-The extracted blob and the working-tree copy hash identically —
-`d966b4c1587f7fad94b3e5bdcf60064c17046edf69b55537e5c9a4cf17fbaea4` — so the incomplete
-checkout did not affect the file the analysis rests on. Recorded because a check whose input
-provenance is "it was in the folder" is not a check.
+The extracted blob and the working-tree copy hash identically, to
+`d966b4c1587f7fad94b3e5bdcf60064c17046edf69b55537e5c9a4cf17fbaea4`, so the incomplete
+checkout did not affect the file the analysis rests on.
 
-## The confirmation, stated first
+## Confirmation
 
-**Every published figure reproduces, and per category, not only in aggregate.** The survey
-recomputed the headline; this check went one level finer, and it holds:
+Every published figure reproduces, per category rather than only in aggregate. The survey
+recomputed the headline; this check went one level finer and it holds:
 
 | subject | F1_BYPASS | F2_FORGE | F3_SILENT | F4_WRONGTGT |
 |---|---|---|---|---|

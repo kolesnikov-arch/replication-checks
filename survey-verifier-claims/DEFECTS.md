@@ -1,174 +1,155 @@
 # Defects in the instrument
 
-Five failures of this survey's own measurement code, found between the freeze and the
-first determination. **Four of the five never raised an error.** They did not crash; they
-returned a smaller denominator, a cleaner sample, or a field that was quietly always
-empty.
+Five failures of this survey's measurement code, found between the freeze and the first
+determination. Four of the five did not raise an error. They returned a smaller denominator,
+a cleaner sample, or a field that was always empty.
 
-This file exists because the survey it belongs to asks other people whether their released
-artifacts permit an independent check. That question is not askable by someone who has not
-written down what went wrong with his own.
+The survey asks whether other people's releases permit an independent check. This file
+records the same question applied to the code that ran it.
 
-Each entry says what the code did, how it was caught, and where the repair is recorded.
-Where an entry cannot be traced to a committed artifact, that is stated.
+Each entry states what the code did, how it was found, and where the repair is recorded.
+Entries that cannot be traced to a committed artifact say so.
 
-| # | defect | silent? | traceable to |
+| # | defect | silent | traceable to |
 |---|---|---|---|
 | 1 | `critic` matched inside `critical` | yes | [CONTRACT-v2.md](CONTRACT-v2.md), frame hash voided |
-| 2 | confidence interval computed inverted | **no** | author's account only |
+| 2 | confidence interval computed inverted | no | author's account only |
 | 3 | XML element with no children read as false | yes | `run.log` line 3, `select.py:183` |
-| 4 | empty result file and a checksum written on network failure | yes | amendment `83273ef`, `select.py:211` |
+| 4 | empty result file and checksum written on network failure | yes | amendment `83273ef`, `select.py:211` |
 | 5 | published hash taken over memory, file written with CRLF | yes | `select.py:316-319` |
 
 ---
 
-## 1 — A substring match pulled in eight hundred papers about intensive care
+## 1 — Substring matching in the v1 term filter
 
-The v1 matcher tested whether a term appeared **anywhere in the abstract as a substring**.
-So `critic` matched `critical` and `criticism`, and `admission` matched hospital admission.
+The v1 matcher tested whether a term appeared anywhere in the abstract as a substring, so
+`critic` matched `critical` and `criticism`, and `admission` matched hospital admission.
 
-Measured on the retrieved cache afterwards: **1,109 of the 1,382 papers in the v1 frame —
-80% — contained no matching term at all.** The v1 sample of 25 was accordingly dominated by
-angiography, astrocyte imaging, robot badminton and 4-bit quantization. Exactly one of the
-25 was on topic.
+Measured on the retrieved cache afterwards: 1,109 of the 1,382 papers in the v1 frame — 80%
+— contained no matching term at all. The v1 sample of 25 was dominated by angiography,
+astrocyte imaging, robot badminton and 4-bit quantization. One of the 25 was on topic.
 
-**Silent.** Nothing failed. The frame was built, the hash computed, the sample drawn, and
-every number downstream would have been a rate over a population of papers about critical
-care.
+Silent. The frame was built, the hash computed and the sample drawn without error. Every
+number downstream would have been a rate over the wrong population.
 
-**Caught** by reading the drawn sample rather than trusting the count.
+Found by reading the drawn sample rather than the count.
 
-**Repaired** in v2: term matching requires word boundaries. That is the only change — the
-term lists, categories, window, inclusion rules, cap and seed were deliberately left
-alone, because a rule rewritten around observed output is no longer pre-registered. The v1
-frame hash `d50b15e8…46fbba` is **void as a frame** and retained only as a record of what
-was frozen.
+Repaired in v2: term matching requires word boundaries. That was the only change. The term
+lists, categories, window, inclusion rules, cap and seed were left alone, because a rule
+rewritten around observed output is no longer pre-registered. The v1 frame hash
+`d50b15e8…46fbba` is void as a frame and kept only as a record of what was frozen.
 
-**Known cost, carried on purpose:** `precision` still admits quantization papers. They are
-removed at the reading stage with a logged reason, and the count of such removals is
-published (7 of the 35 exclusions).
+Known cost, carried deliberately: `precision` still admits quantization papers. They are
+removed at the reading stage with a logged reason, and the count is published — 7 of the 35
+exclusions.
 
-## 2 — A confidence interval returned upside down
+## 2 — Inverted confidence interval
 
-The interval came back as `[1.0, 0.0]` — lower bound above upper.
+The interval was returned as `[1.0, 0.0]`, lower bound above upper.
 
-**Not silent**, and it is the only one of the five that was not. An impossible interval
-announces itself; that is why it was fixed in minutes and why it is the least interesting
-entry here.
+Not silent. It is the only one of the five that was not, and it was fixed in minutes.
 
-**Not traceable to a committed artifact.** The interval code is not part of `select.py`,
-and this entry rests on the author's account rather than on a diff a reader can open. It is
-listed anyway, because omitting the one defect with no paper trail would make this file a
-selection rather than a record.
+Not traceable to a committed artifact. The interval code is not part of `select.py`, so this
+entry rests on the author's account rather than on a diff. It is listed anyway: dropping the
+one defect that has no paper trail would make this list incomplete.
 
-## 3 — A field that was always empty, because an empty element is false
+## 3 — Truth test on an empty XML element
 
-`primary_category` was read with a truth test on the parsed XML element. An element with no
+`primary_category` was read with a truth test on the parsed element. An element with no
 children evaluates as false in ElementTree, so the test failed on every record and the
-fallback won every time. The field was `null` in all 33,805 cached records.
+fallback was used every time. The field is `null` in all 33,805 cached records.
 
-**Silent**, but not quite invisible: Python's own deprecation warning is in the run log,
-third line, from the collection run itself —
+Silent, though not invisible: Python's deprecation warning appears in the run log, third
+line, from the collection run itself.
 
 ```
 select.py:183: DeprecationWarning: Testing an element's truth value will always return
 True in future versions. Use specific 'len(elem)' or 'elem is not None' test instead.
 ```
 
-It was printed, and it was scrolled past, which is the ordinary way a silent defect
-survives.
+It was printed and not read.
 
-**It moved nothing.** `in_frame` reads `categories`, never `primary`, so the enumerated
-list is byte-identical before and after the repair — checked, and recorded in the contract's
-amendment table. A defect that turned out not to reach the result is still a defect; it
-reached nothing by luck of which field the rule happened to read.
+It changed nothing in the result. `in_frame` reads `categories`, never `primary`, so the
+enumerated list is byte-identical before and after the repair — checked, and recorded in the
+contract's amendment table. It is still listed: whether a defect reaches the result depends
+on which field the rule happens to read, not on the defect.
 
-## 4 — A connection error, written out as a finding
+## 4 — Result file written after a failed request
 
-On a failed request the retrieval loop caught the exception, carried on, and at the end
-wrote a result file and its checksum from whatever it had. A network outage therefore
-produced a complete-looking artifact: a list, a hash, a run log — describing a smaller
-population than the frame, with nothing on its face to say so.
+On a failed request the retrieval loop caught the exception, continued, and at the end wrote
+a result file and its checksum from whatever had been collected. A network outage would
+therefore have produced a complete-looking artifact — list, hash and run log — describing a
+smaller population than the frame, with nothing to indicate it.
 
-**Silent, and the most dangerous of the five**, because its output is indistinguishable
-from a successful run by inspection. The hash is real. It just commits to the wrong list.
+Silent, and the most dangerous of the five: the output cannot be distinguished from a
+successful run by inspection. The hash is valid; it commits to the wrong list.
 
-**Repaired** in `83273ef`: any failed request aborts the run and writes nothing.
-`select.py:211` now carries the reason in its docstring so the behaviour is not
-re-optimised away later.
+Repaired in `83273ef`: a failed request aborts the run and writes nothing. `select.py:211`
+carries the reason in its docstring.
 
-## 5 — A published hash that would not have verified against its own file
+## 5 — Hash computed over memory, file written with CRLF
 
-The frame hash was computed over the canonical text **in memory**. The file was then
-written to disk on Windows, where the default text mode turns every `\n` into `\r\n`.
+The frame hash was computed over the canonical text in memory. The file was then written on
+Windows, where the default text mode converts every `\n` to `\r\n`.
 
-Anyone who downloaded `frame.txt` and ran `sha256sum` would have got a different digest
-from the one published beside it — and would have concluded, reasonably, that the list had
-been swapped after the fact.
+Anyone who downloaded `frame.txt` and ran `sha256sum` would have got a different digest from
+the one published beside it, and would reasonably have concluded that the list had been
+changed after the fact.
 
-**Silent, and the one that still bothers.** A commitment device is worth exactly its
-verifiability by a stranger. One that fails the first stranger who checks it does not merely
-fail: it accuses its author of the specific dishonesty it was built to rule out.
+Silent. A hash published as a commitment has no value if it fails for the first person who
+checks it.
 
-**Repaired** at `select.py:319` — the file is opened with `newline=""`, so the bytes hashed
-are the bytes on disk. The reason is written into `CONTRACT.md` next to the freeze record,
-not only into the code.
+Repaired at `select.py:319`: the file is opened with `newline=""`, so the bytes hashed are
+the bytes on disk. The reason is recorded in `CONTRACT.md` next to the freeze record as well
+as in the code.
 
 ---
 
-## What is not in this list
+## Not counted here
 
-**Two further changes appear in the contract's amendment table and are not counted here.**
+Two further changes appear in the contract's amendment table and are not counted as defects.
 `83273ef` also verified TLS on the retrieval requests, and `35016ec` walks the window in
 calendar months because arXiv caps a single result set near 10,000. Both are recorded there
-as changes to how candidates were fetched. Whether the TLS change repaired an actual
-failure or was precautionary is not something the record settles, and it is not claimed as
-a defect here.
+as changes to how candidates were fetched. The record does not settle whether the TLS change
+repaired an actual failure, so it is not claimed as one.
 
-**Two defects outside the instrument.** Recorded separately, because counting either as a
-sixth code defect would inflate the number above.
+Two further defects are outside the measurement code. They are listed separately rather than
+counted above.
 
-### The published hash did not verify for anyone who cloned the repository
+### The published hash did not verify after a clone
 
-Defect 5 was repaired in the code: `select.py` writes `frame.txt` with `newline=""`, so the
-bytes hashed are the bytes on disk. On 2026-08-05, two days after publication, a fresh
-clone was taken and the hash checked the way the contract tells a reader to check it.
+Defect 5 was repaired in the writer. On 2026-08-05, two days after publication, a fresh clone
+was taken and the hash checked the way the contract tells a reader to check it.
 
 ```
 published:      f97c68ded95ba8c3c236c985e1063d83ffc1bfc74e319883b47ee61c626943fe
 fresh clone:    9526aa8fbf5008c79013879da813c2582d8fc753c4f2a17f6e6cd1267405ab8a
 ```
 
-The repository carried no `.gitattributes`, so on Windows — where `core.autocrlf` defaults
-to true — git converted every line ending on checkout. The file the author hashed and the
-file a reader downloads were different bytes.
+The repository carried no `.gitattributes`, so on Windows, where `core.autocrlf` defaults to
+true, git converted the line endings on checkout. The file the author hashed and the file a
+reader downloads were different bytes.
 
-**The same failure as defect 5, through a mechanism one layer further out.** Fixing the
-writer was not enough, because the transport rewrote the file afterwards. A commitment
-device is only as good as the last thing that touches it before a stranger reads it, and
-the code was not the last thing.
+Repairing the writer was not sufficient because the transport modified the file afterwards.
 
 Repaired by pinning `-text` in `.gitattributes`, verified by cloning again.
 
-Found the same way as the entry below: by a reader following the instruction and getting a
-different answer. That is the only test that finds this class, and it is why the contract
-tells readers to run it.
-
-### An artifact pin that resolved to nothing
+### An artifact pin that did not resolve
 
 On 2026-08-05 the artifact pin for `2604.07666` was found to be unresolvable. It had been
-written as `1b66fb59091e` — a twelve-character abbreviation, by habit from the commit SHAs
-in the same table. Gist identifiers are thirty-two characters and GitHub does not resolve
-abbreviations, so the pin returned 404 for every reader, including its author. The gist was
-never deleted.
+written as `1b66fb59091e`, a twelve-character abbreviation copied from the habit of the
+commit SHAs in the same table. Gist identifiers are thirty-two characters and GitHub does not
+resolve abbreviations, so the pin returned 404 for every reader. The gist had not been
+deleted.
 
-Corrected to the full address, owner and revision. Found by trying to use the pin as a
-channel to reach the authors — that is, by a reader following it, which is the only test
-that ever finds this class of error.
+Corrected to the full address, owner and revision.
 
-## The standard this file is held to
+Both of these were found by following a published instruction and getting a different answer
+— which is the only way this class of error is found, and the reason the contract tells
+readers to run the check.
 
-The count in this file governs the count stated anywhere else. If a defect cannot be
-described precisely enough to be checked, it is not added to make a number rounder, and if
-one is later found to have been miscounted, the correction appears here rather than being
-edited into silence.
+## Standard
+
+The count in this file governs the count stated anywhere else. A defect that cannot be
+described precisely enough to be checked is not added to make the number rounder. A
+miscount, if found later, is corrected here rather than in the places that quote it.
