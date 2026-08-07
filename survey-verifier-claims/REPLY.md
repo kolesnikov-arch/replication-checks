@@ -29,6 +29,61 @@ as a criticism of anyone: an address is not an obligation.
 
 ---
 
+## arXiv:2602.24111 — clinical reasoning under formal verification. Debargha Ganguly, 2026-08-06
+
+Determination: **NOT RELEASED**, on a borderline inclusion. The reply is unflattering to me
+and is published in full for that reason. A right of reply that only surfaces the polite
+answers is a testimonial page.
+
+### His reply, verbatim
+
+> Dmitriy- Your email is unreadable and incomprehensible .Please resend after writing it
+> yourself without AI. What do you want from us?
+>
+> Debargha
+
+### My answer, verbatim
+
+> Debargha,
+>
+> I am writing this myself, as I do all my research and correspondence.
+>
+> To answer your question: I want nothing from you. The email was a notification regarding
+> an independent survey of research artifacts. Because I cited your work in the survey, I
+> wanted to provide you with the determination I reached (NOT RELEASED) so that if I am
+> factually wrong—for instance, if the artifacts you mentioned are actually accessible
+> somewhere I failed to find—you have the opportunity to correct the record.
+>
+> My protocol is fully documented at the link provided. If you believe the classification is
+> incorrect, you are welcome to point me to the correct location or provide your feedback,
+> which I will publish alongside the study. If you prefer not to engage, that is entirely
+> your prerogative; no action is required from your side.
+>
+> Dmitriy Kolesnikov
+
+### What I take from it
+
+**He is right about one thing, and it is my defect rather than his.** The notification put
+its point in the fourth paragraph. Before the determination arrived, a stranger's letter
+spent an apology on addresses and a paragraph explaining a borderline inclusion call. That
+ordering was chosen to be scrupulous and it read as noise. A determination that a busy
+person cannot find in the first two lines has failed at the only job it had.
+
+Recorded as a defect of the instrument I use to communicate results, in the same spirit as
+the code defects in [DEFECTS.md](DEFECTS.md): future notifications lead with the
+determination and put the reasoning underneath it.
+
+**The determination itself is untouched.** He did not say the paper releases its artifacts
+somewhere I missed, and he did not contest the inclusion call. The offer to correct either
+stands until 2026-08-19, as it does for everyone in this survey.
+
+**One thing this reply did establish.** The paper prints its addresses in the compact LNCS
+form — a comma-separated list of local parts sharing the domain of the last one — and I
+expanded it rather than writing only to the one address printed in full. The expansion was
+a judgement call and it is now confirmed correct: the message reached him.
+
+---
+
 ## arXiv:2607.13716 — CAVA. Zexun (Jason) Wang, 2026-08-05
 
 Determination at the frame date was **NOT RELEASED**. The author replied the same day,
