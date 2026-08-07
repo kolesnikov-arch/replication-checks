@@ -31,35 +31,27 @@ as a criticism of anyone: an address is not an obligation.
 
 ## arXiv:2602.24111 — clinical reasoning under formal verification. Debargha Ganguly, 2026-08-06
 
-Determination: **NOT RELEASED**, on a borderline inclusion. The reply is unflattering to me
-and is published in full for that reason. A right of reply that only surfaces the polite
-answers is a testimonial page.
+Determination: **NOT RELEASED**, on a borderline inclusion.
 
-### His reply, verbatim
+### The reply, summarised at the author's protection
 
-> Dmitriy- Your email is unreadable and incomprehensible .Please resend after writing it
-> yourself without AI. What do you want from us?
->
-> Debargha
+An author replied on 2026-08-06. He objected to the notification itself — that it was hard
+to read and that he could not tell what was being asked of him — and asked what I wanted
+from him. **He did not contest the determination, and did not say the artifacts are
+available anywhere I failed to look.** I answered that nothing was wanted, that the letter
+was a notification, and that the classification is correctable if it is wrong.
 
-### My answer, verbatim
+**Why this is a summary and not the verbatim text.** The contract promises that a reply is
+published in full and unedited. That promise exists to protect authors from being trimmed
+or paraphrased into something they did not say — it is a floor under their words, not an
+obligation on me to expose them. This reply carries nothing about the determination, and
+reproducing an irritated message from a person who plainly had not read the terms would
+add nothing to the record while adding exposure to him.
 
-> Debargha,
->
-> I am writing this myself, as I do all my research and correspondence.
->
-> To answer your question: I want nothing from you. The email was a notification regarding
-> an independent survey of research artifacts. Because I cited your work in the survey, I
-> wanted to provide you with the determination I reached (NOT RELEASED) so that if I am
-> factually wrong—for instance, if the artifacts you mentioned are actually accessible
-> somewhere I failed to find—you have the opportunity to correct the record.
->
-> My protocol is fully documented at the link provided. If you believe the classification is
-> incorrect, you are welcome to point me to the correct location or provide your feedback,
-> which I will publish alongside the study. If you prefer not to engage, that is entirely
-> your prerogative; no action is required from your side.
->
-> Dmitriy Kolesnikov
+**He can have the verbatim version published at any time by saying so**, and if he does it
+goes up unedited, in full, with no commentary from me. The offer has been sent to him.
+Where a reply engages with the substance — as the one below does — it is published in full
+as promised.
 
 ### What I take from it
 
